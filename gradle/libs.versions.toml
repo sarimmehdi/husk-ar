@@ -1,0 +1,223 @@
+[versions]
+agpVersion = "9.3.0"
+coreKtxVersion = "1.19.0"
+coreSplashscreenVersion = "1.2.0"
+junitVersion = "4.13.2"
+#noinspection NewerVersionAvailable
+junitBomVersion = "5.11.4"
+androidXJunitVersion = "1.3.0"
+espressoCoreVersion = "3.7.0"
+lifecycleRuntimeKtxVersion = "2.11.0"
+activityComposeVersion = "1.13.0"
+kotlinVersion = "2.4.10"
+composeBomVersion = "2026.06.01"
+ktlintVersion = "14.2.0"
+detektVersion = "1.23.8"
+immutableCollectionsVersion = "0.5.1"
+kspVersion = "2.3.6"
+roomVersion = "2.8.4"
+koinVersion = "4.2.2"
+datastoreVersion = "1.2.1"
+kotlinxSerializationVersion = "1.11.0"
+timberVersion = "5.0.1"
+nav3Version = "1.2.0-alpha06"
+navGraphVersion = "0.2.1"
+composeStabilityAnalyzerVersion = "0.10.0"
+lifecycleViewmodelNav3Version = "2.11.0"
+leakCanaryVersion = "2.14"
+paparazziVersion = "2.0.0-alpha05"
+androidPitestVersion = "0.2.27"
+kotlinxCoroutinesVersion = "1.11.0"
+mockkVersion = "1.14.11"
+turbineVersion = "1.2.1"
+archunitVersion = "1.4.2"
+roboelectricVersion = "4.16.1"
+conventionLibraryPluginName = "conventionLibraryPlugin"
+conventionLibraryPluginClass = "convention.AndroidLibraryConventionPlugin"
+conventionApplicationPluginName = "conventionApplicationPlugin"
+conventionApplicationPluginClass = "convention.AndroidApplicationConventionPlugin"
+conventionPaparazziPluginName = "conventionPaparazziPlugin"
+conventionPaparazziPluginClass = "convention.plugins.PaparazziConventionPlugin"
+conventionDataPluginName = "conventionDataPlugin"
+conventionDataPluginClass = "convention.plugins.DataConventionPlugin"
+conventionComposePluginName = "conventionComposePlugin"
+conventionComposePluginClass = "convention.plugins.ComposeConventionPlugin"
+conventionDiPluginName = "conventionDiPlugin"
+conventionDiPluginClass = "convention.plugins.DiConventionPlugin"
+conventionScreenshotPluginName = "conventionScreenshotPlugin"
+conventionScreenshotPluginClass = "convention.plugins.ScreenshotConventionPlugin"
+conventionJacocoPluginName = "conventionJacocoPlugin"
+conventionJacocoPluginClass = "convention.plugins.JacocoConventionPlugin"
+conventionJacocoAggregationPluginName = "conventionJacocoAggregationPlugin"
+conventionJacocoAggregationPluginClass = "convention.plugins.JacocoAggregationConventionPlugin"
+conventionBaselineProfilePluginName = "conventionBaselineProfilePlugin"
+conventionBaselineProfilePluginClass = "convention.plugins.BaselineProfileConventionPlugin"
+conventionArchtestPluginName = "conventionArchtestPlugin"
+conventionArchtestPluginClass = "convention.plugins.ArchtestConventionPlugin"
+conventionMutationPluginName = "conventionMutationPlugin"
+conventionMutationPluginClass = "convention.plugins.MutationConventionPlugin"
+uiautomatorVersion = "2.4.0"
+benchmarkMacroJunit4Version = "1.5.0-alpha07"
+baselineprofileVersion = "1.5.0-alpha07"
+profileinstallerVersion = "1.4.1"
+androidXTestRunnerVersion = "1.7.0"
+workManagerVersion = "2.11.2"
+firebaseBomVersion = "34.16.0"
+googleServicesVersion = "4.5.0"
+sentryVersion = "8.49.0"
+sentryGradlePluginVersion = "6.15.0"
+appcompatVersion = "1.6.1"
+materialVersion = "1.10.0"
+nodeRuntimeVersion = "24.18.0"
+markdownlintCli2Version = "0.23.1"
+markdownTablePrettifyVersion = "4.1.0"
+lycheeVersion = "0.24.2"
+
+[libraries]
+androidxCoreKtxLibrary = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtxVersion" }
+androidxCoreSplashscreenLibrary = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreenVersion" }
+junitBomLibrary = { group = "org.junit", name = "junit-bom", version.ref = "junitBomVersion" }
+junitJupiterLibrary = { group = "org.junit.jupiter", name = "junit-jupiter" }
+junitPlatformLauncherLibrary = { group = "org.junit.platform", name = "junit-platform-launcher" }
+junitLibrary = { group = "junit", name = "junit", version.ref = "junitVersion" }
+androidxJunitLibrary = { group = "androidx.test.ext", name = "junit", version.ref = "androidXJunitVersion" }
+androidxEspressoCoreLibrary = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCoreVersion" }
+androidxLifecycleRuntimeKtxLibrary = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtxVersion" }
+androidxLifecycleRuntimeComposeLibrary = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtxVersion" }
+androidxActivityComposeLibrary = { group = "androidx.activity", name = "activity-compose", version.ref = "activityComposeVersion" }
+androidxComposeBomLibrary = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBomVersion" }
+androidxComposeUiLibrary = { group = "androidx.compose.ui", name = "ui" }
+androidxComposeMaterialIconsExtendedLibrary = { group = "androidx.compose.material", name = "material-icons-extended" }
+androidxComposeUiGraphicsLibrary = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidxComposeUiToolingLibrary = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidxComposeUiToolingPreviewLibrary = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidxComposeUiTestManifestLibrary = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidxComposeUiTestJunit4Library = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidxComposeMaterial3Library = { group = "androidx.compose.material3", name = "material3" }
+immutableCollectionsLibrary = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "immutableCollectionsVersion" }
+androidxRoomRuntimeLibrary = { group = "androidx.room", name = "room-runtime", version.ref = "roomVersion" }
+androidxRoomKtxLibrary = { group = "androidx.room", name = "room-ktx", version.ref = "roomVersion" }
+androidxRoomCompilerLibrary = { group = "androidx.room", name = "room-compiler", version.ref = "roomVersion" }
+koinCoreLibrary = { group = "io.insert-koin", name = "koin-core", version.ref = "koinVersion" }
+koinTestLibrary = { group = "io.insert-koin", name = "koin-test", version.ref = "koinVersion" }
+koinCoreCoroutinesLibrary = { group = "io.insert-koin", name = "koin-core-coroutines", version.ref = "koinVersion" }
+koinAndroidLibrary = { group = "io.insert-koin", name = "koin-android", version.ref = "koinVersion" }
+koinAndroidxComposeLibrary = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koinVersion" }
+koinAndroidxComposeNavigationLibrary = { group = "io.insert-koin", name = "koin-compose-navigation3", version.ref = "koinVersion" }
+androidxDatastoreLibrary = { group = "androidx.datastore", name = "datastore", version.ref = "datastoreVersion" }
+androidxDatastorePreferencesLibrary = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastoreVersion" }
+kotlinxSerializationJsonLibrary = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationVersion" }
+timberLibrary = { group = "com.jakewharton.timber", name = "timber", version.ref = "timberVersion" }
+nav3RuntimeLibrary = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "nav3Version" }
+nav3UiLibrary = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = "nav3Version" }
+nav3LifecycleLibrary = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3Version" }
+androidGradlePluginLibrary = { group = "com.android.tools.build", name = "gradle", version.ref = "agpVersion" }
+kotlinGradlePluginLibrary = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlinVersion" }
+kspGradlePluginLibrary = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "kspVersion" }
+roomGradlePluginLibrary = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "roomVersion" }
+detektGradlePluginLibrary = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detektVersion" }
+detektApiLibrary = { group = "io.gitlab.arturbosch.detekt", name = "detekt-api", version.ref = "detektVersion" }
+detektTestLibrary = { group = "io.gitlab.arturbosch.detekt", name = "detekt-test", version.ref = "detektVersion" }
+ktlintGradlePluginLibrary = { group = "org.jlleitschuh.gradle.ktlint", name = "org.jlleitschuh.gradle.ktlint.gradle.plugin", version.ref = "ktlintVersion" }
+baselineProfileGradlePluginLibrary = { group = "androidx.benchmark", name = "benchmark-baseline-profile-gradle-plugin", version.ref = "benchmarkMacroJunit4Version" }
+androidPitestGradlePluginLibrary = { group = "pl.droidsonroids.pitest", name = "pl.droidsonroids.pitest.gradle.plugin", version.ref = "androidPitestVersion" }
+leakcanaryAndroidLibrary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakCanaryVersion" }
+kotlinxCoroutinesTestLibrary = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesVersion" }
+kotlinxCoroutinesCoreLibrary = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesVersion" }
+mockkLibrary = { group = "io.mockk", name = "mockk", version.ref = "mockkVersion" }
+turbineLibrary = { group = "app.cash.turbine", name = "turbine", version.ref = "turbineVersion" }
+archunitLibrary = { group = "com.tngtech.archunit", name = "archunit", version.ref = "archunitVersion" }
+roboelectricLibrary = { group = "org.robolectric", name = "robolectric", version.ref = "roboelectricVersion" }
+uiautomatorLibrary = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomatorVersion" }
+benchmarkMacroJunit4Library = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "benchmarkMacroJunit4Version" }
+androidxTestRunnerLibrary = { group = "androidx.test", name = "runner", version.ref = "androidXTestRunnerVersion" }
+androidxTestCoreLibrary = { group = "androidx.test", name = "core-ktx", version.ref = "androidXTestRunnerVersion" }
+androidxRoomTestingLibrary = { group = "androidx.room", name = "room-testing", version.ref = "roomVersion" }
+androidxWorkRuntimeLibrary = { group = "androidx.work", name = "work-runtime", version.ref = "workManagerVersion" }
+androidxWorkTestingLibrary = { group = "androidx.work", name = "work-testing", version.ref = "workManagerVersion" }
+profileinstallerLibrary = { group = "androidx.profileinstaller", name = "profileinstaller", version.ref = "profileinstallerVersion" }
+kotlinSerializationGradlePluginLibrary = { group = "org.jetbrains.kotlin.plugin.serialization", name = "org.jetbrains.kotlin.plugin.serialization.gradle.plugin", version.ref = "kotlinVersion" }
+navGraphGradlePluginLibrary = { group = "com.github.skydoves.navgraph", name = "com.github.skydoves.navgraph.gradle.plugin", version.ref = "navGraphVersion" }
+composeStabilityAnalyzerGradlePluginLibrary = { group = "com.github.skydoves.compose.stability.analyzer", name = "com.github.skydoves.compose.stability.analyzer.gradle.plugin", version.ref = "composeStabilityAnalyzerVersion" }
+googleServicesGradlePluginLibrary = { group = "com.google.gms", name = "google-services", version.ref = "googleServicesVersion" }
+sentryAndroidGradlePluginLibrary = { group = "io.sentry", name = "sentry-android-gradle-plugin", version.ref = "sentryGradlePluginVersion" }
+firebaseBomLibrary = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBomVersion" }
+firebaseAnalyticsLibrary = { group = "com.google.firebase", name = "firebase-analytics" }
+sentryAndroidLibrary = { group = "io.sentry", name = "sentry-android-core", version.ref = "sentryVersion" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompatVersion" }
+material = { group = "com.google.android.material", name = "material", version.ref = "materialVersion" }
+
+[bundles]
+composeUiBundle = [
+    "androidxComposeUiLibrary",
+    "androidxComposeMaterialIconsExtendedLibrary",
+    "androidxComposeUiGraphicsLibrary",
+    "androidxComposeMaterial3Library",
+]
+composePreviewBundle = [
+    "androidxComposeUiToolingLibrary",
+    "androidxComposeUiToolingPreviewLibrary",
+    "androidxComposeUiTestManifestLibrary",
+]
+unitTestingBundle = [
+    "junitLibrary",
+    "kotlinxCoroutinesTestLibrary",
+    "mockkLibrary",
+    "turbineLibrary"
+]
+androidTestingBundle = [
+    "androidxJunitLibrary",
+    "androidxEspressoCoreLibrary",
+    "androidxComposeUiTestJunit4Library"
+]
+roomBundle = [
+    "androidxRoomRuntimeLibrary",
+    "androidxRoomKtxLibrary",
+]
+koinBundle = [
+    "koinCoreLibrary",
+    "koinCoreCoroutinesLibrary",
+    "koinAndroidLibrary",
+    "koinAndroidxComposeLibrary",
+    "koinAndroidxComposeNavigationLibrary",
+]
+dataStoreBundle = [
+    "androidxDatastoreLibrary",
+    "androidxDatastorePreferencesLibrary",
+    "kotlinxSerializationJsonLibrary",
+]
+navBundle = [
+    "nav3RuntimeLibrary",
+    "nav3UiLibrary",
+    "nav3LifecycleLibrary",
+]
+
+[plugins]
+androidApplicationPlugin = { id = "com.android.application", version.ref = "agpVersion" }
+kotlinComposePlugin = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinVersion" }
+ktlintPlugin = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintVersion" }
+detektPlugin = { id = "io.gitlab.arturbosch.detekt", version.ref = "detektVersion" }
+kspPlugin = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
+kotlinSerializationPlugin = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
+androidLibraryPlugin = { id = "com.android.library", version.ref = "agpVersion" }
+roomPlugin = { id = "androidx.room", version.ref = "roomVersion" }
+paparazziPlugin = { id = "app.cash.paparazzi", version.ref = "paparazziVersion" }
+androidTestPlugin = { id = "com.android.test", version.ref = "agpVersion" }
+navGraphPlugin = { id = "com.github.skydoves.navgraph", version.ref = "navGraphVersion" }
+composeStabilityAnalyzerPlugin = { id = "com.github.skydoves.compose.stability.analyzer", version.ref = "composeStabilityAnalyzerVersion" }
+baselineprofilePlugin = { id = "androidx.baselineprofile", version.ref = "baselineprofileVersion" }
+androidPitestPlugin = { id = "pl.droidsonroids.pitest", version.ref = "androidPitestVersion" }
+googleServicesPlugin = { id = "com.google.gms.google-services", version.ref = "googleServicesVersion" }
+sentryAndroidGradlePlugin = { id = "io.sentry.android.gradle", version.ref = "sentryGradlePluginVersion" }
+conventionLibraryPluginId = { id = "com.sarim.convention.library.plugin" }
+conventionApplicationPluginId = { id = "com.sarim.convention.application.plugin" }
+conventionPaparazziPluginId = { id = "com.sarim.convention.paparazzi.plugin" }
+conventionDataPluginId = { id = "com.sarim.convention.data.plugin" }
+conventionComposePluginId = { id = "com.sarim.convention.compose.plugin" }
+conventionDiPluginId = { id = "com.sarim.convention.di.plugin" }
+conventionScreenshotPluginId = { id = "com.sarim.convention.screenshot.plugin" }
+conventionJacocoPluginId = { id = "com.sarim.convention.jacoco.plugin" }
+conventionJacocoAggregationPluginId = { id = "com.sarim.convention.jacoco.aggregation.plugin" }
+conventionBaselineProfilePluginId = { id = "com.sarim.convention.baseline.profile.plugin" }
+conventionArchtestPluginId = { id = "com.sarim.convention.archtest.plugin" }
+conventionMutationPluginId = { id = "com.sarim.convention.mutation.plugin" }

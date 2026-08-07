@@ -1,0 +1,14 @@
+<resources>
+    <string name="error_disk_full">Storage is full. Cannot load data.</string>
+    <string name="error_db_failure">Database error. Please try restarting the app.</string>
+    <string name="error_corrupted_data">Saved data is damaged and cannot be read. Clear the app’s storage to recover.</string>
+    <string name="error_io_failure">Saved data is temporarily unavailable. Please try again.</string>
+    <string name="error_unknown">An unexpected error occurred. Please try again.</string>
+    <string name="error_connection">Connection error. Please check your internet and try again.</string>
+    <string name="error_invalid_state">An unexpected system error occurred. Please restart the app.</string>
+    <string name="error_unavailable_title">Unable to load this screen</string>
+    <string name="error_icon_content_description">Error</string>
+    <string name="information_icon_content_description">Information</string>
+    <string name="warning_icon_content_description">Warning</string>
+    <string name="retry">Retry</string>
+</resources>

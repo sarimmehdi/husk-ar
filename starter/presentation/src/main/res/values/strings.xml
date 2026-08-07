@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="starter_title">Clean architecture starter</string>
+    <string name="starter_architecture_description">Compose observes presentation state. The domain layer owns the greeting rule, and the data layer persists it behind a repository.</string>
+    <string name="starter_name_label">Name</string>
+    <string name="starter_save_action">Update greeting</string>
+</resources>
