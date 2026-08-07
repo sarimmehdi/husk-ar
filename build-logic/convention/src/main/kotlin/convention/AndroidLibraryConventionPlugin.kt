@@ -88,6 +88,8 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                             add("implementation", project(":utils"))
                             add("implementation", project(":nav"))
                         }
+                        // Intentionally empty: a pure module earns its dependencies explicitly.
+                        ModuleType.PURE -> Unit
                     }
 
                     val internalDependencyConfiguration =

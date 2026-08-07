@@ -32,6 +32,7 @@ plugins {
 
 rootProject.name = "Husk"
 include(":app")
+include(":geometry")
 include(":nav")
 include(":ui")
 include(":utils")
