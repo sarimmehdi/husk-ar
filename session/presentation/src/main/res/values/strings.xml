@@ -44,4 +44,5 @@
     <string name="replay_move_forward">Move closer, about %1$d cm</string>
     <string name="replay_move_back">Move back, about %1$d cm</string>
     <string name="session_object_replay">Replay</string>
+    <string name="session_list_markers_action">Markers</string>
 </resources>

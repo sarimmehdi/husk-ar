@@ -26,7 +26,12 @@ class SessionListContentTest {
     ) {
         composeRule.setContent {
             HuskTheme {
-                SessionListContent(state = state, onEvent = onEvent, onOpenSession = onOpenSession)
+                SessionListContent(
+                    state = state,
+                    onEvent = onEvent,
+                    onOpenSession = onOpenSession,
+                    onOpenMarkers = {},
+                )
             }
         }
     }

@@ -32,6 +32,10 @@ sealed interface Route : NavKey {
         val label: String,
     ) : Route
 
+    /** The marker library, and how to print each one. */
+    @Serializable
+    data object Markers : Route
+
     /** Walking back through the views an object was measured from. */
     @Serializable
     data class Replay(

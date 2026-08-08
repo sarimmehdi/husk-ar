@@ -5,6 +5,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.sarim.husk.ar.ShellPalette
+import com.sarim.husk.marker.presentation.MarkerLibraryScreen
+import com.sarim.husk.marker.presentation.MarkerLibraryViewModel
 import com.sarim.husk.nav.Navigator
 import com.sarim.husk.nav.Route
 import com.sarim.husk.session.presentation.CaptureScreen
@@ -34,6 +36,7 @@ fun StarterApp(modifier: Modifier = Modifier) {
 
     when (current) {
         Route.Home -> SessionListDestination(navigator, modifier)
+        Route.Markers -> MarkerLibraryScreen(koinViewModel<MarkerLibraryViewModel>(), modifier)
         is Route.SessionDetail -> SessionDetailDestination(current, navigator, modifier)
         is Route.Capture -> CaptureDestination(current, modifier)
         is Route.Replay -> ReplayDestination(current, modifier)
@@ -48,6 +51,7 @@ private fun SessionListDestination(
     SessionListScreen(
         viewModel = koinViewModel<SessionListViewModel>(),
         onOpenSession = { navigator.navigateTo(Route.SessionDetail(it)) },
+        onOpenMarkers = { navigator.navigateTo(Route.Markers) },
         modifier = modifier,
     )
 }

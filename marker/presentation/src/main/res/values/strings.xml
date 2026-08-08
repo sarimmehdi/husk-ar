@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="marker_library_title">Markers</string>
+    <string name="marker_print_instructions">Print at %1$d x %2$d mm, leaving %3$d mm at each side and %4$d mm top and bottom.</string>
+    <string name="marker_print_scaling_warning">Print at actual size. Fit to page will shrink it, and every measurement shrinks with it.</string>
+    <string name="marker_reference_bar">The bar beside the marker should measure exactly %1$d mm. Check it with a ruler.</string>
+    <string name="marker_measured_label">What the bar actually measures, in mm</string>
+    <string name="marker_apply_measurement">Correct the size</string>
+    <string name="marker_too_big">Too large for this paper. Choose a bigger sheet or a smaller width.</string>
+    <string name="marker_delete">Delete</string>
+</resources>

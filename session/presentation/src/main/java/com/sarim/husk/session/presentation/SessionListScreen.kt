@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -32,6 +34,7 @@ import com.sarim.husk.ui.theme.spacing
 fun SessionListScreen(
     viewModel: SessionListViewModel,
     onOpenSession: (String) -> Unit,
+    onOpenMarkers: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -39,6 +42,7 @@ fun SessionListScreen(
         state = state,
         onEvent = viewModel::onEvent,
         onOpenSession = onOpenSession,
+        onOpenMarkers = onOpenMarkers,
         modifier = modifier,
     )
 }
@@ -49,11 +53,13 @@ fun SessionListContent(
     state: SessionListScreenState,
     onEvent: (SessionListScreenToViewModelEvents) -> Unit,
     onOpenSession: (String) -> Unit,
+    onOpenMarkers: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SessionListScreenTemplate(
         modifier = modifier,
         onCreate = { onEvent(SessionListScreenToViewModelEvents.Create("")) },
+        onOpenMarkers = onOpenMarkers,
     ) { contentPadding ->
         when {
             state.isLoading -> LoadingIndicator(contentPadding)
@@ -126,6 +132,7 @@ private fun EmptyMessage(contentPadding: PaddingValues) {
 @Composable
 fun SessionListScreenTemplate(
     onCreate: () -> Unit,
+    onOpenMarkers: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable (PaddingValues) -> Unit,
 ) {
@@ -133,6 +140,16 @@ fun SessionListScreenTemplate(
         Scaffold(
             content = content,
             contentWindowInsets = WindowInsets.safeDrawing,
+            topBar = {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(MaterialTheme.spacing.screenPadding),
+                    horizontalArrangement = Arrangement.End,
+                ) {
+                    TextButton(onClick = onOpenMarkers) {
+                        Text(stringResource(R.string.session_list_markers_action))
+                    }
+                }
+            },
             floatingActionButton = {
                 // The plain overload rather than the text/icon slots: with no icon to show, the
                 // slotted form leaves its label outside the merged semantics node, so the button
