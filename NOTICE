@@ -1,0 +1,8 @@
+Husk bundles the following third-party material.
+
+app/src/main/assets/markers/earth.jpg
+    From Google's ARCore "Augmented Images" developer guide, where it is published as an
+    example image and rated 100 out of 100 for trackability.
+    Source: https://developers.google.com/ar/develop/augmented-images
+    Licence: Creative Commons Attribution 4.0 International (CC BY 4.0), per that page's
+    stated terms. Unmodified.

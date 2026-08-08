@@ -15,4 +15,12 @@
         <item quantity="one">%1$d view</item>
         <item quantity="other">%1$d views</item>
     </plurals>
+    <string name="capture_overlay_description">Outline the object</string>
+    <string name="capture_find_marker">Point the camera at the marker</string>
+    <string name="capture_outline">Drag a box around the object</string>
+    <string name="capture_hold_still">Hold still while outlining</string>
+    <string name="capture_need_more_views">Move to a new angle and outline it again</string>
+    <string name="capture_move_around">Move further around the object</string>
+    <string name="capture_outline_unusable">That outline was too small to use</string>
+    <string name="capture_measured">Measured. More angles will improve it.</string>
 </resources>

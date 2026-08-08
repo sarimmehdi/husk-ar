@@ -34,6 +34,7 @@ import com.sarim.husk.ui.theme.spacing
 fun SessionDetailScreen(
     viewModel: SessionDetailViewModel,
     onSessionMissing: () -> Unit,
+    onMeasureObject: (String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -47,6 +48,7 @@ fun SessionDetailScreen(
     SessionDetailContent(
         state = state,
         onEvent = viewModel::onEvent,
+        onMeasureObject = onMeasureObject,
         modifier = modifier,
     )
 }
@@ -56,6 +58,7 @@ fun SessionDetailScreen(
 fun SessionDetailContent(
     state: SessionDetailScreenState,
     onEvent: (SessionDetailScreenToViewModelEvents) -> Unit,
+    onMeasureObject: (String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SessionDetailScreenTemplate(
@@ -78,15 +81,21 @@ fun SessionDetailContent(
                     contentPadding = contentPadding,
                     verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
                 ) {
-                    items(state.objects, key = { it.id }) { row -> ObjectCard(row) }
+                    items(state.objects, key = { it.id }) { row ->
+                        ObjectCard(row, onMeasure = { onMeasureObject(row.id, row.label) })
+                    }
                 }
         }
     }
 }
 
 @Composable
-private fun ObjectCard(row: MeasuredObjectRow) {
+private fun ObjectCard(
+    row: MeasuredObjectRow,
+    onMeasure: () -> Unit,
+) {
     Card(
+        onClick = onMeasure,
         modifier =
             Modifier
                 .fillMaxWidth()

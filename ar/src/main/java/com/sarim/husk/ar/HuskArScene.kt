@@ -13,8 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.google.ar.core.AugmentedImage
 import com.google.ar.core.Config
+import com.google.ar.core.Frame
 import com.google.ar.core.Session
 import com.google.ar.core.TrackingState
+import com.sarim.husk.geometry.CameraIntrinsics
 import com.sarim.husk.geometry.Ellipsoid
 import io.github.sceneview.NodeScope
 import io.github.sceneview.ar.ARSceneView
@@ -65,6 +67,20 @@ data class SceneContent(
 )
 
 /**
+ * What the scene reports back each frame.
+ *
+ * Grouped rather than passed separately: both describe the same thing, whether the marker is in
+ * view and what the camera is doing relative to it, and callers almost always want either both or
+ * neither.
+ */
+data class SceneObserver(
+    /** Called when the marker starts or stops being tracked. */
+    val onMarkerTrackingChanged: (Boolean) -> Unit = {},
+    /** Called every frame with the camera against the marker, or null while it is not tracked. */
+    val onFrame: (CameraSnapshot?) -> Unit = {},
+)
+
+/**
  * The AR view: a tracked marker with ellipsoids drawn in its frame.
  *
  * Everything is positioned relative to the marker rather than to the session origin. That is what
@@ -77,7 +93,7 @@ fun HuskArScene(
     content: SceneContent,
     onSelect: (String?) -> Unit,
     modifier: Modifier = Modifier,
-    onMarkerTrackingChanged: (Boolean) -> Unit = {},
+    observer: SceneObserver = SceneObserver(),
 ) {
     val engine = rememberEngine()
     val materialLoader = rememberMaterialLoader(engine)
@@ -102,12 +118,15 @@ fun HuskArScene(
             config.updateMode = Config.UpdateMode.BLOCKING
             config.focusMode = Config.FocusMode.AUTO
         },
-        onSessionUpdated = { session, _ ->
+        onSessionUpdated = { session, frame ->
             val found = session.trackedMarkerNamed(marker.name)
             if ((found != null) != (trackedMarker != null)) {
-                onMarkerTrackingChanged(found != null)
+                observer.onMarkerTrackingChanged(found != null)
             }
             trackedMarker = found
+            // Reported every frame rather than fetched when a trace is committed. By then the frame
+            // that was outlined has already been replaced, and the pose would belong to a later one.
+            observer.onFrame(found?.let { frame.snapshotAgainst(it) })
         },
         // A tap the shells did not consume clears the selection. Node taps are handled per node and
         // return true, so anything arriving here missed every shell. Without this the only way out
@@ -171,6 +190,36 @@ private fun NodeScope.Shells(
             )
         }
     }
+}
+
+/**
+ * This frame's camera, expressed against the marker.
+ *
+ * imageIntrinsics rather than textureIntrinsics: an outline is mapped into camera image coordinates
+ * before it reaches the solver, so the lens has to describe that same image.
+ */
+private fun Frame.snapshotAgainst(marker: AugmentedImage): CameraSnapshot {
+    val lens = camera.imageIntrinsics
+    val focalLength = lens.focalLength
+    val principalPoint = lens.principalPoint
+    val dimensions = lens.imageDimensions
+    return CameraSnapshot(
+        cameraInMarker =
+            cameraInMarkerFrame(
+                cameraInWorld = poseFrom(camera.pose.translation, camera.pose.rotationQuaternion),
+                markerInWorld =
+                    poseFrom(marker.centerPose.translation, marker.centerPose.rotationQuaternion),
+            ),
+        intrinsics =
+            CameraIntrinsics(
+                focalLengthX = focalLength[0].toDouble(),
+                focalLengthY = focalLength[1].toDouble(),
+                principalPointX = principalPoint[0].toDouble(),
+                principalPointY = principalPoint[1].toDouble(),
+            ),
+        imageWidth = dimensions[0],
+        imageHeight = dimensions[1],
+    )
 }
 
 /** The marker with this name, if ARCore is currently tracking it. */

@@ -5,6 +5,24 @@
 //   ./gradlew :presentation:stabilityDump
 
 @Composable
+public fun com.sarim.husk.session.presentation.CaptureScreen(viewModel: com.sarim.husk.session.presentation.CaptureViewModel, marker: com.sarim.husk.ar.MarkerImage, palette: com.sarim.husk.ar.ShellPalette, modifier: androidx.compose.ui.Modifier): kotlin.Unit
+  skippable: false
+  restartable: true
+  params:
+    - viewModel: UNSTABLE (has mutable properties or unstable members)
+    - marker: UNSTABLE (has mutable properties or unstable members)
+    - palette: STABLE (class with no mutable properties)
+    - modifier: STABLE (marked @Stable or @Immutable)
+
+@Composable
+private fun com.sarim.husk.session.presentation.CaptureStatus(state: com.sarim.husk.session.presentation.CaptureScreenState, modifier: androidx.compose.ui.Modifier): kotlin.Unit
+  skippable: true
+  restartable: true
+  params:
+    - state: STABLE (class with no mutable properties)
+    - modifier: STABLE (marked @Stable or @Immutable)
+
+@Composable
 private fun com.sarim.husk.session.presentation.CentredBox(contentPadding: androidx.compose.foundation.layout.PaddingValues, content: @[Composable] androidx.compose.runtime.internal.ComposableFunction0<kotlin.Unit>): kotlin.Unit
   skippable: true
   restartable: true
@@ -27,11 +45,12 @@ private fun com.sarim.husk.session.presentation.LoadingIndicator(contentPadding:
     - contentPadding: STABLE (marked @Stable or @Immutable)
 
 @Composable
-private fun com.sarim.husk.session.presentation.ObjectCard(row: com.sarim.husk.session.presentation.MeasuredObjectRow): kotlin.Unit
+private fun com.sarim.husk.session.presentation.ObjectCard(row: com.sarim.husk.session.presentation.MeasuredObjectRow, onMeasure: kotlin.Function0<kotlin.Unit>): kotlin.Unit
   skippable: false
   restartable: true
   params:
     - row: RUNTIME (requires runtime check)
+    - onMeasure: STABLE (function type)
 
 @Composable
 private fun com.sarim.husk.session.presentation.SessionCard(row: com.sarim.husk.session.presentation.SessionRow, onOpen: kotlin.Function0<kotlin.Unit>): kotlin.Unit
@@ -42,21 +61,23 @@ private fun com.sarim.husk.session.presentation.SessionCard(row: com.sarim.husk.
     - onOpen: STABLE (function type)
 
 @Composable
-public fun com.sarim.husk.session.presentation.SessionDetailContent(state: com.sarim.husk.session.presentation.SessionDetailScreenState, onEvent: kotlin.Function1<com.sarim.husk.session.presentation.SessionDetailScreenToViewModelEvents, kotlin.Unit>, modifier: androidx.compose.ui.Modifier): kotlin.Unit
+public fun com.sarim.husk.session.presentation.SessionDetailContent(state: com.sarim.husk.session.presentation.SessionDetailScreenState, onEvent: kotlin.Function1<com.sarim.husk.session.presentation.SessionDetailScreenToViewModelEvents, kotlin.Unit>, onMeasureObject: kotlin.Function2<kotlin.String, kotlin.String, kotlin.Unit>, modifier: androidx.compose.ui.Modifier): kotlin.Unit
   skippable: false
   restartable: true
   params:
     - state: RUNTIME (requires runtime check)
     - onEvent: STABLE (function type)
+    - onMeasureObject: STABLE (function type)
     - modifier: STABLE (marked @Stable or @Immutable)
 
 @Composable
-public fun com.sarim.husk.session.presentation.SessionDetailScreen(viewModel: com.sarim.husk.session.presentation.SessionDetailViewModel, onSessionMissing: kotlin.Function0<kotlin.Unit>, modifier: androidx.compose.ui.Modifier): kotlin.Unit
+public fun com.sarim.husk.session.presentation.SessionDetailScreen(viewModel: com.sarim.husk.session.presentation.SessionDetailViewModel, onSessionMissing: kotlin.Function0<kotlin.Unit>, onMeasureObject: kotlin.Function2<kotlin.String, kotlin.String, kotlin.Unit>, modifier: androidx.compose.ui.Modifier): kotlin.Unit
   skippable: false
   restartable: true
   params:
     - viewModel: UNSTABLE (has mutable properties or unstable members)
     - onSessionMissing: STABLE (function type)
+    - onMeasureObject: STABLE (function type)
     - modifier: STABLE (marked @Stable or @Immutable)
 
 @Composable

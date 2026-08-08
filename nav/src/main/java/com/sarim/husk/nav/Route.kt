@@ -20,4 +20,15 @@ sealed interface Route : NavKey {
         /** Which session to show. */
         val sessionId: String,
     ) : Route
+
+    /** Outlining one object through the camera. */
+    @Serializable
+    data class Capture(
+        /** Which session the object belongs to. */
+        val sessionId: String,
+        /** Which object is being measured. */
+        val objectId: String,
+        /** What it is called, so the screen can say so without waiting for a read. */
+        val label: String,
+    ) : Route
 }

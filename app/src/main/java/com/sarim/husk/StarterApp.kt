@@ -1,10 +1,15 @@
 package com.sarim.husk
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.sarim.husk.ar.MarkerImage
+import com.sarim.husk.ar.ShellPalette
 import com.sarim.husk.nav.Navigator
 import com.sarim.husk.nav.Route
+import com.sarim.husk.session.presentation.CaptureScreen
+import com.sarim.husk.session.presentation.CaptureViewModel
 import com.sarim.husk.session.presentation.SessionDetailScreen
 import com.sarim.husk.session.presentation.SessionDetailViewModel
 import com.sarim.husk.session.presentation.SessionListScreen
@@ -47,6 +52,30 @@ fun StarterApp(modifier: Modifier = Modifier) {
             SessionDetailScreen(
                 viewModel = viewModel,
                 onSessionMissing = navigator::pop,
+                onMeasureObject = { objectId, label ->
+                    navigator.navigateTo(Route.Capture(current.sessionId, objectId, label))
+                },
+                modifier = modifier,
+            )
+        }
+
+        is Route.Capture -> {
+            val marker: MarkerImage = koinInject()
+            val viewModel =
+                koinViewModel<CaptureViewModel>(
+                    key = current.objectId,
+                    parameters = {
+                        parametersOf(current.sessionId, current.objectId, current.label)
+                    },
+                )
+            CaptureScreen(
+                viewModel = viewModel,
+                marker = marker,
+                palette =
+                    ShellPalette(
+                        unselected = MaterialTheme.colorScheme.primary,
+                        selected = MaterialTheme.colorScheme.tertiary,
+                    ),
                 modifier = modifier,
             )
         }

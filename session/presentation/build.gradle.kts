@@ -20,6 +20,10 @@ libraryConfig {
 }
 
 dependencies {
+    // The capture screen puts the trace overlay over the AR feed, and pairs each outline with the
+    // frame it was drawn on.
+    api(project(":ar"))
+
     // MeasuredObject carries an Ellipsoid, so the test fakes need geometry on the classpath.
     testImplementation(project(":geometry"))
 }

@@ -19,6 +19,11 @@ libraryConfig {
 
 dependencies {
     api(project(":geometry"))
-    api(libs.arSceneViewLibrary)
+    api(libs.arSceneViewLibrary) {
+        // SceneView still depends on kotlin-android-extensions-runtime, the 2020-era predecessor of
+        // kotlin-parcelize-runtime. Both publish kotlinx.android.parcel.*, so any module using
+        // @Parcelize alongside SceneView fails dex merging on duplicate classes.
+        exclude(group = "org.jetbrains.kotlin", module = "kotlin-android-extensions-runtime")
+    }
     implementation(libs.arCoreLibrary)
 }
