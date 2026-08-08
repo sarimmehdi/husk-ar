@@ -19,6 +19,9 @@ libraryConfig {
 }
 
 dependencies {
+    // The data layer owns the adapter between the domain's ShellFitter port and the native solver,
+    // which is why the solver is a dependency here and not of the domain.
+    implementation(project(":solver"))
     implementation(libs.kotlinxCoroutinesCoreLibrary)
 
     androidTestImplementation(libs.androidxJunitLibrary)

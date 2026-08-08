@@ -1,12 +1,18 @@
 package com.sarim.husk.session.di
 
+import com.sarim.husk.session.data.fitting.SolverShellFitter
 import com.sarim.husk.session.data.repository.InMemorySessionRepositoryImpl
+import com.sarim.husk.session.domain.fitting.ShellFitter
 import com.sarim.husk.session.domain.model.MarkerId
 import com.sarim.husk.session.domain.repository.SessionRepository
+import com.sarim.husk.session.domain.usecase.CaptureObservationUseCase
 import com.sarim.husk.session.domain.usecase.CreateSessionUseCase
+import com.sarim.husk.session.domain.usecase.DeleteObjectUseCase
 import com.sarim.husk.session.domain.usecase.DeleteSessionUseCase
+import com.sarim.husk.session.domain.usecase.ObserveSessionUseCase
 import com.sarim.husk.session.domain.usecase.ObserveSessionsUseCase
 import com.sarim.husk.session.domain.usecase.RenameSessionUseCase
+import com.sarim.husk.session.domain.usecase.StartObjectUseCase
 import com.sarim.husk.session.presentation.SessionListScreenUseCase
 import com.sarim.husk.session.presentation.SessionListViewModel
 import org.koin.core.module.dsl.viewModel
@@ -24,7 +30,14 @@ val sessionModule =
         // Identity and time enter the graph here and nowhere else, which is what lets the use case
         // be tested without either.
         factory { CreateSessionUseCase(get(), { UUID.randomUUID().toString() }, { Instant.now() }) }
+        // Single, because it loads a native library. A factory would reload it per screen.
+        single<ShellFitter> { SolverShellFitter() }
+
         factory { ObserveSessionsUseCase(get()) }
+        factory { ObserveSessionUseCase(get()) }
+        factory { StartObjectUseCase(get(), { UUID.randomUUID().toString() }) }
+        factory { CaptureObservationUseCase(get(), get()) }
+        factory { DeleteObjectUseCase(get()) }
         factory { RenameSessionUseCase(get()) }
         factory { DeleteSessionUseCase(get()) }
 
