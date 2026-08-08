@@ -24,3 +24,14 @@ private fun com.sarim.husk.ar.Shells(content: com.sarim.husk.ar.SceneContent, ma
     - materialLoader: UNSTABLE (has mutable properties or unstable members)
     - onSelect: STABLE (function type)
 
+@Composable
+public fun com.sarim.husk.ar.TraceOverlay(onTraceChanged: kotlin.Function1<com.sarim.husk.ar.TracedEllipse, kotlin.Unit>, onTraceCommitted: kotlin.Function1<com.sarim.husk.ar.TracedEllipse, kotlin.Unit>, strokeColour: androidx.compose.ui.graphics.Color, contentDescription: kotlin.String, modifier: androidx.compose.ui.Modifier): kotlin.Unit
+  skippable: true
+  restartable: true
+  params:
+    - onTraceChanged: STABLE (function type)
+    - onTraceCommitted: STABLE (function type)
+    - strokeColour: STABLE (marked @Stable or @Immutable)
+    - contentDescription: STABLE (String is immutable)
+    - modifier: STABLE (marked @Stable or @Immutable)
+
