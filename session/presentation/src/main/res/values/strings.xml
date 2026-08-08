@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="session_list_empty">No sessions yet. Start one to begin measuring.</string>
+    <string name="session_list_create_action">New session</string>
+    <plurals name="session_object_count">
+        <item quantity="one">%1$d object measured</item>
+        <item quantity="other">%1$d objects measured</item>
+    </plurals>
+</resources>

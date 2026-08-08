@@ -1,6 +1,7 @@
 package com.sarim.husk
 
 import android.app.Application
+import com.sarim.husk.session.di.sessionModule
 import com.sarim.husk.starter.di.starterModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -11,7 +12,7 @@ class StarterApplication : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@StarterApplication)
-            modules(starterModule)
+            modules(starterModule, sessionModule)
         }
     }
 }
