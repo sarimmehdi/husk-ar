@@ -73,6 +73,12 @@ markdownlintCli2Version = "0.23.1"
 markdownTablePrettifyVersion = "4.1.0"
 lycheeVersion = "0.24.2"
 
+# SceneView wraps Filament and ARCore behind a Compose API. Its own ARCore dependency is the one
+# that matters; declaring ARCore separately here only pins the version SceneView already asks for, so
+# a Gradle resolution bump cannot silently move it.
+sceneViewVersion = "4.26.0"
+arCoreVersion = "1.54.0"
+
 [libraries]
 androidxCoreKtxLibrary = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtxVersion" }
 androidxCoreSplashscreenLibrary = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreenVersion" }
@@ -146,6 +152,8 @@ firebaseAnalyticsLibrary = { group = "com.google.firebase", name = "firebase-ana
 sentryAndroidLibrary = { group = "io.sentry", name = "sentry-android-core", version.ref = "sentryVersion" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompatVersion" }
 material = { group = "com.google.android.material", name = "material", version.ref = "materialVersion" }
+arSceneViewLibrary = { group = "io.github.sceneview", name = "arsceneview", version.ref = "sceneViewVersion" }
+arCoreLibrary = { group = "com.google.ar", name = "core", version.ref = "arCoreVersion" }
 
 [bundles]
 composeUiBundle = [

@@ -34,6 +34,7 @@ rootProject.name = "Husk"
 include(":app")
 include(":geometry")
 include(":solver")
+include(":ar")
 include(":nav")
 include(":ui")
 include(":utils")
