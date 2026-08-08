@@ -1,7 +1,9 @@
 package com.sarim.husk.session.di
 
+import androidx.room.Room
+import com.sarim.husk.session.data.database.SessionDatabase
 import com.sarim.husk.session.data.fitting.SolverShellFitter
-import com.sarim.husk.session.data.repository.InMemorySessionRepositoryImpl
+import com.sarim.husk.session.data.repository.RoomSessionRepositoryImpl
 import com.sarim.husk.session.domain.fitting.ShellFitter
 import com.sarim.husk.session.domain.model.MarkerId
 import com.sarim.husk.session.domain.model.SessionId
@@ -18,6 +20,7 @@ import com.sarim.husk.session.presentation.SessionDetailScreenUseCase
 import com.sarim.husk.session.presentation.SessionDetailViewModel
 import com.sarim.husk.session.presentation.SessionListScreenUseCase
 import com.sarim.husk.session.presentation.SessionListViewModel
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import java.time.Instant
@@ -26,9 +29,19 @@ import java.util.UUID
 /** Dependency graph for the session feature. */
 val sessionModule =
     module {
-        // Single, because the in-memory store is the only copy of the data. A factory would hand
-        // every screen its own empty repository.
-        single<SessionRepository> { InMemorySessionRepositoryImpl() }
+        single {
+            Room
+                .databaseBuilder(
+                    context = androidContext(),
+                    klass = SessionDatabase::class.java,
+                    name = DATABASE_NAME,
+                ).build()
+        }
+        single { get<SessionDatabase>().sessionDao() }
+        single { get<SessionDatabase>().measurementDao() }
+
+        // Single, so every screen reads and writes the same connection rather than opening its own.
+        single<SessionRepository> { RoomSessionRepositoryImpl(get(), get()) }
 
         // Identity and time enter the graph here and nowhere else, which is what lets the use case
         // be tested without either.
@@ -56,6 +69,8 @@ val sessionModule =
         // something the graph can supply.
         viewModel { (sessionId: String) -> SessionDetailViewModel(get(), SessionId(sessionId)) }
     }
+
+private const val DATABASE_NAME = "husk-sessions.db"
 
 /** The single marker every session is anchored to until the marker library arrives. */
 private const val DEFAULT_MARKER_ID = "husk-default-marker"

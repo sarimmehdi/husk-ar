@@ -21,6 +21,9 @@ libraryConfig {
 }
 
 dependencies {
+    // The database is built here rather than in the data layer, which is forbidden from taking an
+    // Android Context. That puts Room on this module's compile classpath too.
+    implementation(libs.bundles.roomBundle)
     implementation(libs.koinCoreLibrary)
     implementation(libs.koinCoreCoroutinesLibrary)
     implementation(libs.koinAndroidLibrary)
