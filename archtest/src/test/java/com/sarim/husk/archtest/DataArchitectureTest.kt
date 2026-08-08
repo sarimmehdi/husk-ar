@@ -205,6 +205,14 @@ class DataArchitectureTest : ArchitectureTestSupport() {
     }
 }
 
+private val CLASS_DIR_SUFFIXES =
+    listOf(
+        "build/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes",
+        "build/intermediates/javac/debug/compileDebugJavaWithJavac/classes",
+    )
+
+private val SOURCE_EXTENSIONS = setOf("kt", "java")
+
 abstract class ArchitectureTestSupport {
     private val projectRoot: File by lazy {
         var dir = File(System.getProperty("user.dir") ?: error("user.dir system property is not set"))
@@ -215,21 +223,27 @@ abstract class ArchitectureTestSupport {
     }
 
     protected fun importModule(vararg moduleRelativePaths: String): JavaClasses {
+        val unbuilt = mutableListOf<String>()
         val classDirs =
             moduleRelativePaths
                 .flatMap { modulePath ->
-                    listOf(
-                        File(
-                            projectRoot,
-                            "$modulePath/build/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes",
-                        ),
-                        File(
-                            projectRoot,
-                            "$modulePath/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes",
-                        ),
-                    )
-                }.filter(File::isDirectory)
-                .map(File::toPath)
+                    val dirs =
+                        CLASS_DIR_SUFFIXES
+                            .map { suffix -> File(projectRoot, "$modulePath/$suffix") }
+                            .filter(File::isDirectory)
+                    // A module with sources but nothing compiled would otherwise be dropped from the
+                    // import and its rules quietly never checked, while the suite still passed on
+                    // whichever modules did happen to be built.
+                    if (dirs.isEmpty() && hasSources(modulePath)) {
+                        unbuilt += modulePath
+                    }
+                    dirs
+                }.map(File::toPath)
+
+        check(unbuilt.isEmpty()) {
+            "These modules have sources but no compiled classes, so their architecture would go " +
+                "unverified: " + unbuilt + ". Build them first (./gradlew assemble)."
+        }
 
         check(classDirs.isNotEmpty()) {
             "No compiled class directories found under $projectRoot for: " +
@@ -240,6 +254,15 @@ abstract class ArchitectureTestSupport {
         return ClassFileImporter()
             .withImportOption(ImportOption.DoNotIncludeTests())
             .importPaths(classDirs)
+    }
+
+    /** Whether a module has anything for the compiler to produce classes from. */
+    private fun hasSources(modulePath: String): Boolean {
+        val main = File(projectRoot, "$modulePath/src/main")
+        return main.isDirectory &&
+            main
+                .walkTopDown()
+                .any { it.isFile && it.extension in SOURCE_EXTENSIONS }
     }
 
     protected fun importLayer(layer: String): JavaClasses {
