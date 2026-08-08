@@ -234,6 +234,68 @@ class SessionDetailViewModelTest {
         }
 
     @Test
+    fun `searching marks what matches rather than hiding the rest`() =
+        runTest {
+            // A list that empties as you type hides how much is there, and the scene needs the
+            // shells that did not match too, so it knows which to fade and which to arrow towards.
+            val repository =
+                FakeRepository(listOf(session(listOf(measured("o1", "Mug"), measured("o2", "Kettle")))))
+            val model = viewModel(repository)
+
+            model.onEvent(SessionDetailScreenToViewModelEvents.SearchChanged("mug"))
+
+            val rows = model.state.value.objects
+            assertEquals(2, rows.size)
+            assertEquals(listOf(true, false), rows.map { it.matchesSearch })
+        }
+
+    @Test
+    fun `searching ignores capitals`() =
+        runTest {
+            // Nobody looking for a mug types a capital M and means it.
+            val repository = FakeRepository(listOf(session(listOf(measured("o1", "Mug")))))
+            val model = viewModel(repository)
+
+            model.onEvent(SessionDetailScreenToViewModelEvents.SearchChanged("MUG"))
+
+            assertTrue(
+                model.state.value.objects
+                    .single()
+                    .matchesSearch,
+            )
+        }
+
+    @Test
+    fun `an empty search matches nothing rather than everything`() =
+        runTest {
+            // Highlighting every shell the moment the box is cleared would be a strobe, not a
+            // search result.
+            val repository = FakeRepository(listOf(session(listOf(measured("o1", "Mug")))))
+            val model = viewModel(repository)
+            model.onEvent(SessionDetailScreenToViewModelEvents.SearchChanged("mug"))
+
+            model.onEvent(SessionDetailScreenToViewModelEvents.SearchChanged("   "))
+
+            assertFalse(
+                model.state.value.objects
+                    .single()
+                    .matchesSearch,
+            )
+        }
+
+    @Test
+    fun `the debug overlay toggles`() =
+        runTest {
+            val model = viewModel(FakeRepository(listOf(session())))
+
+            assertFalse("off until asked for", model.state.value.isDebugVisible)
+            model.onEvent(SessionDetailScreenToViewModelEvents.DebugToggled)
+            assertTrue(model.state.value.isDebugVisible)
+            model.onEvent(SessionDetailScreenToViewModelEvents.DebugToggled)
+            assertFalse(model.state.value.isDebugVisible)
+        }
+
+    @Test
     fun `an empty session is not reported as missing`() =
         runTest {
             val state = viewModel(FakeRepository(listOf(session()))).state.value

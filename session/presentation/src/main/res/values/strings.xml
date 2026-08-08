@@ -45,4 +45,6 @@
     <string name="replay_move_back">Move back, about %1$d cm</string>
     <string name="session_object_replay">Replay</string>
     <string name="session_list_markers_action">Markers</string>
+    <string name="session_search_label">Search measurements</string>
+    <string name="session_debug_toggle">Debug</string>
 </resources>

@@ -13,9 +13,11 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -87,6 +89,7 @@ fun SessionDetailContent(
     SessionDetailScreenTemplate(
         modifier = modifier,
         onStartObject = { onEvent(SessionDetailScreenToViewModelEvents.StartObject("")) },
+        onToggleDebug = { onEvent(SessionDetailScreenToViewModelEvents.DebugToggled) },
     ) { contentPadding ->
         when {
             state.isLoading -> CentredBox(contentPadding) { CircularProgressIndicator() }
@@ -104,6 +107,7 @@ fun SessionDetailContent(
                     contentPadding = contentPadding,
                     verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
                 ) {
+                    item { SearchField(state.search, onEvent) }
                     items(state.objects, key = { it.id }) { row ->
                         ObjectCard(
                             row = row,
@@ -130,6 +134,15 @@ private fun ObjectCard(
 ) {
     Card(
         onClick = onMeasure,
+        // A match is coloured rather than moved, so the list does not reflow under a finger while
+        // someone is typing. Amber over the default rather than green, which too many people cannot
+        // tell from the surface beneath it.
+        colors =
+            if (row.matchesSearch) {
+                CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
+            } else {
+                CardDefaults.cardColors()
+            },
         modifier =
             Modifier
                 .fillMaxWidth()
@@ -161,6 +174,24 @@ private fun ObjectCard(
             }
         }
     }
+}
+
+/** Narrows nothing; marks what matches so the scene can highlight the same shells. */
+@Composable
+private fun SearchField(
+    query: String,
+    onEvent: (SessionDetailScreenToViewModelEvents) -> Unit,
+) {
+    OutlinedTextField(
+        value = query,
+        onValueChange = { onEvent(SessionDetailScreenToViewModelEvents.SearchChanged(it)) },
+        label = { Text(stringResource(R.string.session_search_label)) },
+        singleLine = true,
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = MaterialTheme.spacing.screenPadding),
+    )
 }
 
 /**
@@ -214,6 +245,7 @@ private fun CentredBox(
 @Composable
 fun SessionDetailScreenTemplate(
     onStartObject: () -> Unit,
+    onToggleDebug: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable (PaddingValues) -> Unit,
 ) {
@@ -224,6 +256,16 @@ fun SessionDetailScreenTemplate(
             floatingActionButton = {
                 ExtendedFloatingActionButton(onClick = onStartObject) {
                     Text(stringResource(R.string.session_detail_start_object))
+                }
+            },
+            topBar = {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(MaterialTheme.spacing.screenPadding),
+                    horizontalArrangement = Arrangement.End,
+                ) {
+                    TextButton(onClick = onToggleDebug) {
+                        Text(stringResource(R.string.session_debug_toggle))
+                    }
                 }
             },
         )

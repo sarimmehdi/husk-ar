@@ -14,9 +14,10 @@ import com.sarim.husk.session.domain.usecase.AdjustShellUseCase
 import com.sarim.husk.session.domain.usecase.DeleteObjectUseCase
 import com.sarim.husk.session.domain.usecase.ObserveSessionUseCase
 import com.sarim.husk.session.domain.usecase.StartObjectUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -35,6 +36,8 @@ data class MeasuredObjectRow(
     val extentMillimetres: List<Int>,
     /** How far the measurement can be trusted. */
     val confidence: MeasurementConfidence,
+    /** Whether this row matches the current search. */
+    val matchesSearch: Boolean = false,
 ) : Parcelable
 
 /** What the session screen draws. */
@@ -48,6 +51,10 @@ data class SessionDetailScreenState(
     val isLoading: Boolean = true,
     /** Whether the session is gone, having been deleted from somewhere else. */
     val isMissing: Boolean = false,
+    /** What is being searched for. */
+    val search: String = "",
+    /** Whether the debug overlay is on. */
+    val isDebugVisible: Boolean = false,
 ) : Parcelable
 
 /** What the session screen can ask for. */
@@ -64,6 +71,15 @@ sealed interface SessionDetailScreenToViewModelEvents {
         /** Which object. */
         val id: String,
     ) : SessionDetailScreenToViewModelEvents
+
+    /** Narrow the list, and highlight what matches in the scene. */
+    data class SearchChanged(
+        /** What to look for. */
+        val query: String,
+    ) : SessionDetailScreenToViewModelEvents
+
+    /** Turn the debug overlay on or off. */
+    data object DebugToggled : SessionDetailScreenToViewModelEvents
 
     /** Correct a fitted shell by hand. */
     data class AdjustObject(
@@ -91,19 +107,39 @@ class SessionDetailViewModel(
     private val useCases: SessionDetailScreenUseCase,
     private val sessionId: SessionId,
 ) : ViewModel() {
+    private val search = MutableStateFlow("")
+    private val debugVisible = MutableStateFlow(false)
+
     /** What the screen draws. */
     val state: StateFlow<SessionDetailScreenState> =
-        useCases
-            .observeSessionUseCase(sessionId)
-            .map { session -> session?.toState() ?: MISSING }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
-                initialValue = SessionDetailScreenState(),
-            )
+        combine(
+            useCases.observeSessionUseCase(sessionId),
+            search,
+            debugVisible,
+        ) { session, query, debug ->
+            (session?.toState(query) ?: MISSING).copy(search = query, isDebugVisible = debug)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
+            initialValue = SessionDetailScreenState(),
+        )
 
     /** Handles [event]. */
     fun onEvent(event: SessionDetailScreenToViewModelEvents) {
+        // Neither of these touches storage, so they answer at once rather than waiting on a
+        // coroutine — typing into a search box that lags a frame behind reads as broken.
+        when (event) {
+            is SessionDetailScreenToViewModelEvents.SearchChanged -> {
+                search.value = event.query
+                return
+            }
+            SessionDetailScreenToViewModelEvents.DebugToggled -> {
+                debugVisible.value = !debugVisible.value
+                return
+            }
+            else -> Unit
+        }
+
         viewModelScope.launch {
             when (event) {
                 is SessionDetailScreenToViewModelEvents.StartObject ->
@@ -114,6 +150,11 @@ class SessionDetailViewModel(
 
                 is SessionDetailScreenToViewModelEvents.AdjustObject ->
                     useCases.adjustShellUseCase(sessionId, ObjectId(event.id), event.adjustment)
+
+                // Both were dealt with above, without touching storage.
+                is SessionDetailScreenToViewModelEvents.SearchChanged,
+                SessionDetailScreenToViewModelEvents.DebugToggled,
+                -> Unit
             }
         }
     }
@@ -125,15 +166,18 @@ class SessionDetailViewModel(
     }
 }
 
-private fun Session.toState() =
+private fun Session.toState(query: String) =
     SessionDetailScreenState(
         name = name,
-        objects = objects.map(MeasuredObject::toRow),
+        // Matches are marked rather than filtered out. A list that empties as you type hides how
+        // much is there, and the scene needs to know which shells to highlight and which to arrow
+        // towards — both of which need the ones that did not match as well.
+        objects = objects.map { it.toRow(query) },
         isLoading = false,
         isMissing = false,
     )
 
-private fun MeasuredObject.toRow(): MeasuredObjectRow {
+private fun MeasuredObject.toRow(query: String): MeasuredObjectRow {
     val extent = shell.extent()
     return MeasuredObjectRow(
         id = id.value,
@@ -152,6 +196,8 @@ private fun MeasuredObject.toRow(): MeasuredObjectRow {
                 isHandAdjusted -> MeasurementConfidence.ADJUSTED
                 else -> quality?.confidence() ?: MeasurementConfidence.UNMEASURED
             },
+        // Case folded, because nobody searching for a mug types a capital M and means it.
+        matchesSearch = query.isNotBlank() && label.contains(query.trim(), ignoreCase = true),
     )
 }
 

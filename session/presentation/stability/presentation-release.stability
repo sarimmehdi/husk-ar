@@ -111,6 +111,14 @@ private fun com.sarim.husk.session.presentation.ScaleSlider(labelId: kotlin.Int,
     - onChange: STABLE (function type)
 
 @Composable
+private fun com.sarim.husk.session.presentation.SearchField(query: kotlin.String, onEvent: kotlin.Function1<com.sarim.husk.session.presentation.SessionDetailScreenToViewModelEvents, kotlin.Unit>): kotlin.Unit
+  skippable: true
+  restartable: true
+  params:
+    - query: STABLE (String is immutable)
+    - onEvent: STABLE (function type)
+
+@Composable
 private fun com.sarim.husk.session.presentation.SessionCard(row: com.sarim.husk.session.presentation.SessionRow, onOpen: kotlin.Function0<kotlin.Unit>): kotlin.Unit
   skippable: true
   restartable: true
@@ -141,11 +149,12 @@ public fun com.sarim.husk.session.presentation.SessionDetailScreen(viewModel: co
     - modifier: STABLE (marked @Stable or @Immutable)
 
 @Composable
-public fun com.sarim.husk.session.presentation.SessionDetailScreenTemplate(onStartObject: kotlin.Function0<kotlin.Unit>, modifier: androidx.compose.ui.Modifier, content: @[Composable] androidx.compose.runtime.internal.ComposableFunction1<androidx.compose.foundation.layout.PaddingValues, kotlin.Unit>): kotlin.Unit
+public fun com.sarim.husk.session.presentation.SessionDetailScreenTemplate(onStartObject: kotlin.Function0<kotlin.Unit>, onToggleDebug: kotlin.Function0<kotlin.Unit>, modifier: androidx.compose.ui.Modifier, content: @[Composable] androidx.compose.runtime.internal.ComposableFunction1<androidx.compose.foundation.layout.PaddingValues, kotlin.Unit>): kotlin.Unit
   skippable: true
   restartable: true
   params:
     - onStartObject: STABLE (function type)
+    - onToggleDebug: STABLE (function type)
     - modifier: STABLE (marked @Stable or @Immutable)
     - content: STABLE (composable function type)
 
