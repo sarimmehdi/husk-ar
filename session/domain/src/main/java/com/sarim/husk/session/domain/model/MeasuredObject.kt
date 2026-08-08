@@ -9,6 +9,24 @@ data class ObjectId(
 )
 
 /**
+ * How far a measurement can be trusted, in words rather than radians.
+ *
+ * The bands come from measuring the solver against synthetic captures: with a pixel of tracing
+ * error, radius error runs about 2% at a radian of view spread, 4% at 0.4, and then climbs sharply —
+ * past 50% by 0.2 and beyond 1000% below 0.05. The boundaries below sit where that curve turns.
+ */
+enum class MeasurementConfidence {
+    /** Not enough separated views yet for a shell at all. */
+    UNMEASURED,
+
+    /** Views close together. The shape is indicative; the numbers are not worth quoting. */
+    ROUGH,
+
+    /** Views spread well around the object. Within a few percent. */
+    GOOD,
+}
+
+/**
  * How far a measurement can be trusted.
  *
  * Deliberately a copy of what the solver reports rather than a reference to it. The solver is
@@ -32,7 +50,27 @@ data class MeasurementQuality(
     val conicResidual: Double,
     /** How clearly one shell stood apart from the alternatives when it was solved. */
     val nullSpaceMargin: Double,
-)
+) {
+    /**
+     * This measurement's confidence band.
+     *
+     * Judged on view spread alone. The residual looks like the obvious candidate and is the wrong
+     * one: measured across a sweep of capture geometries it stayed flat while radius error ran from
+     * 1% to 5000%, because a badly triangulated shell still reprojects onto every outline it was fit
+     * to.
+     */
+    fun confidence(): MeasurementConfidence =
+        when {
+            viewSpreadRadians >= GOOD_SPREAD_RADIANS -> MeasurementConfidence.GOOD
+            viewSpreadRadians > 0.0 -> MeasurementConfidence.ROUGH
+            else -> MeasurementConfidence.UNMEASURED
+        }
+
+    private companion object {
+        /** Below this, a pixel of tracing error costs more than a few percent of radius. */
+        const val GOOD_SPREAD_RADIANS = 0.4
+    }
+}
 
 /**
  * One thing measured in a session: a shell, and the captures it was derived from.

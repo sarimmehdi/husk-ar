@@ -4,6 +4,7 @@ import com.sarim.husk.session.data.fitting.SolverShellFitter
 import com.sarim.husk.session.data.repository.InMemorySessionRepositoryImpl
 import com.sarim.husk.session.domain.fitting.ShellFitter
 import com.sarim.husk.session.domain.model.MarkerId
+import com.sarim.husk.session.domain.model.SessionId
 import com.sarim.husk.session.domain.repository.SessionRepository
 import com.sarim.husk.session.domain.usecase.CaptureObservationUseCase
 import com.sarim.husk.session.domain.usecase.CreateSessionUseCase
@@ -13,6 +14,8 @@ import com.sarim.husk.session.domain.usecase.ObserveSessionUseCase
 import com.sarim.husk.session.domain.usecase.ObserveSessionsUseCase
 import com.sarim.husk.session.domain.usecase.RenameSessionUseCase
 import com.sarim.husk.session.domain.usecase.StartObjectUseCase
+import com.sarim.husk.session.presentation.SessionDetailScreenUseCase
+import com.sarim.husk.session.presentation.SessionDetailViewModel
 import com.sarim.husk.session.presentation.SessionListScreenUseCase
 import com.sarim.husk.session.presentation.SessionListViewModel
 import org.koin.core.module.dsl.viewModel
@@ -46,6 +49,12 @@ val sessionModule =
         // Until the marker library exists there is one marker, named here rather than invented
         // deeper down where it would be harder to find and replace.
         viewModel { SessionListViewModel(get(), MarkerId(DEFAULT_MARKER_ID)) }
+
+        factory { SessionDetailScreenUseCase(get(), get(), get()) }
+
+        // The session id comes from the back stack entry, so it is a runtime parameter rather than
+        // something the graph can supply.
+        viewModel { (sessionId: String) -> SessionDetailViewModel(get(), SessionId(sessionId)) }
     }
 
 /** The single marker every session is anchored to until the marker library arrives. */

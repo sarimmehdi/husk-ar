@@ -8,4 +8,16 @@ sealed interface Route : NavKey {
     /** Default destination displayed by a generated application shell. */
     @Serializable
     data object Home : Route
+
+    /**
+     * One session and everything measured in it.
+     *
+     * Carries the id rather than the session itself, so a back stack restored after the process was
+     * killed reads the current state instead of a snapshot taken before it died.
+     */
+    @Serializable
+    data class SessionDetail(
+        /** Which session to show. */
+        val sessionId: String,
+    ) : Route
 }

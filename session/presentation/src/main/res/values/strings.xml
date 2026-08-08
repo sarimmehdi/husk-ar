@@ -6,4 +6,13 @@
         <item quantity="one">%1$d object measured</item>
         <item quantity="other">%1$d objects measured</item>
     </plurals>
+    <string name="session_detail_empty">Nothing measured yet. Start an object to begin.</string>
+    <string name="session_detail_start_object">Measure something</string>
+    <string name="session_object_unmeasured">Not measured yet</string>
+    <string name="session_object_extent">%1$d x %2$d x %3$d mm</string>
+    <string name="session_object_extent_rough">About %1$d x %2$d x %3$d mm, views too close together</string>
+    <plurals name="session_view_count">
+        <item quantity="one">%1$d view</item>
+        <item quantity="other">%1$d views</item>
+    </plurals>
 </resources>
