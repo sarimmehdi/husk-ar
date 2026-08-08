@@ -40,6 +40,7 @@ fun SessionDetailScreen(
     viewModel: SessionDetailViewModel,
     onSessionMissing: () -> Unit,
     onMeasureObject: (String, String) -> Unit,
+    onReplayObject: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -54,6 +55,7 @@ fun SessionDetailScreen(
         state = state,
         onEvent = viewModel::onEvent,
         onMeasureObject = onMeasureObject,
+        onReplayObject = onReplayObject,
         modifier = modifier,
     )
 }
@@ -64,6 +66,7 @@ fun SessionDetailContent(
     state: SessionDetailScreenState,
     onEvent: (SessionDetailScreenToViewModelEvents) -> Unit,
     onMeasureObject: (String, String) -> Unit,
+    onReplayObject: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     // Held here rather than in the view model: which sheet is open is a property of this screen,
@@ -106,6 +109,7 @@ fun SessionDetailContent(
                             row = row,
                             onMeasure = { onMeasureObject(row.id, row.label) },
                             onAdjust = { adjusting = row },
+                            onReplay = { onReplayObject(row.id) },
                             onDelete = {
                                 onEvent(SessionDetailScreenToViewModelEvents.DeleteObject(row.id))
                             },
@@ -121,6 +125,7 @@ private fun ObjectCard(
     row: MeasuredObjectRow,
     onMeasure: () -> Unit,
     onAdjust: () -> Unit,
+    onReplay: () -> Unit,
     onDelete: () -> Unit,
 ) {
     Card(
@@ -144,6 +149,9 @@ private fun ObjectCard(
                 style = MaterialTheme.typography.bodySmall,
             )
             Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)) {
+                TextButton(onClick = onReplay) {
+                    Text(stringResource(R.string.session_object_replay))
+                }
                 TextButton(onClick = onAdjust) {
                     Text(stringResource(R.string.session_object_adjust))
                 }

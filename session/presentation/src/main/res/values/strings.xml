@@ -33,4 +33,15 @@
     <string name="session_adjust_axis_width">Width</string>
     <string name="session_adjust_axis_height">Height</string>
     <string name="session_adjust_axis_depth">Depth</string>
+    <string name="replay_position">%1$s, view %2$d of %3$d</string>
+    <string name="replay_previous">Previous</string>
+    <string name="replay_next">Next</string>
+    <string name="replay_aligned">You are back where this was taken. The outline shows what was traced.</string>
+    <string name="replay_move_left">Move left, about %1$d cm</string>
+    <string name="replay_move_right">Move right, about %1$d cm</string>
+    <string name="replay_move_up">Move up, about %1$d cm</string>
+    <string name="replay_move_down">Move down, about %1$d cm</string>
+    <string name="replay_move_forward">Move closer, about %1$d cm</string>
+    <string name="replay_move_back">Move back, about %1$d cm</string>
+    <string name="session_object_replay">Replay</string>
 </resources>

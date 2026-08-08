@@ -23,6 +23,8 @@ import com.sarim.husk.session.domain.usecase.RenameSessionUseCase
 import com.sarim.husk.session.domain.usecase.StartObjectUseCase
 import com.sarim.husk.session.presentation.CaptureScreenUseCase
 import com.sarim.husk.session.presentation.CaptureViewModel
+import com.sarim.husk.session.presentation.ReplayScreenUseCase
+import com.sarim.husk.session.presentation.ReplayViewModel
 import com.sarim.husk.session.presentation.SessionDetailScreenUseCase
 import com.sarim.husk.session.presentation.SessionDetailViewModel
 import com.sarim.husk.session.presentation.SessionListScreenUseCase
@@ -74,6 +76,11 @@ val sessionModule =
 
         factory { SessionDetailScreenUseCase(get(), get(), get(), get()) }
         factory { CaptureScreenUseCase(get()) }
+        factory { ReplayScreenUseCase(get()) }
+
+        viewModel { (sessionId: String, objectId: String) ->
+            ReplayViewModel(get(), SessionId(sessionId), ObjectId(objectId))
+        }
 
         // Loaded once. Decoding a nine hundred pixel square JPEG per screen would stutter the
         // camera at exactly the moment someone is trying to hold the phone still.

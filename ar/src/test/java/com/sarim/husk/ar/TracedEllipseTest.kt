@@ -204,6 +204,50 @@ class TracedEllipseTest {
         assertTrue(traced.isUsable)
     }
 
+    @Test
+    fun `mapping to the image and back returns the same point`() {
+        val (imageX, imageY) = cropped.toImage(700f, 1500f)
+        val (previewX, previewY) = cropped.toPreview(imageX, imageY)
+
+        assertEquals(700f, previewX, FLOAT_TOLERANCE)
+        assertEquals(1500f, previewY, FLOAT_TOLERANCE)
+    }
+
+    @Test
+    fun `a recorded outline redrawn on the preview lands where it was traced`() {
+        // What replay shows as a hint. If it does not land back where the finger went, the hint is
+        // worse than nothing: it tells someone to outline the wrong part of the object.
+        val traced =
+            TracedEllipse(
+                centreX = 700f,
+                centreY = 1500f,
+                semiMajor = 180f,
+                semiMinor = 90f,
+                rotationRadians = 0.35f,
+            )
+
+        val redrawn = traced.toDualConic(cropped).toTracedEllipse(cropped)
+
+        assertEquals(traced.centreX, redrawn.centreX, FLOAT_TOLERANCE)
+        assertEquals(traced.centreY, redrawn.centreY, FLOAT_TOLERANCE)
+        assertEquals(traced.semiMajor, redrawn.semiMajor, FLOAT_TOLERANCE)
+        assertEquals(traced.semiMinor, redrawn.semiMinor, FLOAT_TOLERANCE)
+        assertEquals(traced.rotationRadians, redrawn.rotationRadians, FLOAT_TOLERANCE)
+    }
+
+    @Test
+    fun `a hint drawn on a differently shaped preview still lands on the object`() {
+        // The preview is whatever the phone is holding it at, which need not match the one the
+        // capture was taken on. The hint has to follow the current mapping, not the recorded one.
+        val traced =
+            TracedEllipse(540f, 1200f, 100f, 100f, 0f)
+        val onTheOther = traced.toDualConic(cropped).toTracedEllipse(sameShape)
+
+        // Middle of one preview is the middle of the other, whatever the shapes.
+        assertEquals(640f, onTheOther.centreX, FLOAT_TOLERANCE)
+        assertEquals(480f, onTheOther.centreY, FLOAT_TOLERANCE)
+    }
+
     private companion object {
         const val TOLERANCE = 1e-9
         const val FLOAT_TOLERANCE = 1e-4f

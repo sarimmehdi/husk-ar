@@ -31,4 +31,13 @@ sealed interface Route : NavKey {
         /** What it is called, so the screen can say so without waiting for a read. */
         val label: String,
     ) : Route
+
+    /** Walking back through the views an object was measured from. */
+    @Serializable
+    data class Replay(
+        /** Which session the object belongs to. */
+        val sessionId: String,
+        /** Which object to replay. */
+        val objectId: String,
+    ) : Route
 }

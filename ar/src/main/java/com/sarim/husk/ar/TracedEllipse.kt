@@ -47,6 +47,35 @@ data class PreviewMapping(
         x: Float,
         y: Float,
     ): Pair<Double, Double> = (x - offsetX) / scale to (y - offsetY) / scale
+
+    /**
+     * Where a point in the camera image falls on the preview.
+     *
+     * The inverse of [toImage], for drawing something recorded in image coordinates back onto a
+     * live preview — a replay hint, which is only useful if it lands where the outline was drawn.
+     */
+    fun toPreview(
+        x: Double,
+        y: Double,
+    ): Pair<Float, Float> = (x * scale + offsetX).toFloat() to (y * scale + offsetY).toFloat()
+}
+
+/**
+ * A recorded outline as it would look drawn on this preview.
+ *
+ * Positions and lengths both scale, and a uniform scale leaves the orientation alone, so the shape
+ * is the same one that was traced rather than an approximation of it.
+ */
+fun DualConic.toTracedEllipse(mapping: PreviewMapping): TracedEllipse {
+    val parameters = toParameters()
+    val (x, y) = mapping.toPreview(parameters.centreX, parameters.centreY)
+    return TracedEllipse(
+        centreX = x,
+        centreY = y,
+        semiMajor = (parameters.semiMajor * mapping.scale).toFloat(),
+        semiMinor = (parameters.semiMinor * mapping.scale).toFloat(),
+        rotationRadians = parameters.rotationRadians.toFloat(),
+    )
 }
 
 /**
