@@ -2,7 +2,9 @@ package com.sarim.husk.geometry
 
 import kotlin.math.abs
 import kotlin.math.atan2
+import kotlin.math.cos
 import kotlin.math.hypot
+import kotlin.math.sin
 import kotlin.math.sqrt
 
 /**
@@ -48,28 +50,28 @@ data class DualConic(
     fun toParameters(): EllipseParameters {
         if (abs(m22) < DEGENERATE_EPSILON) return EllipseParameters(0.0, 0.0, 0.0, 0.0, 0.0)
 
-        // Normalise so the homogeneous scale is one, then the centre falls out of the last column.
-        val scale = 1.0 / m22
-        val centreX = m02 * scale
-        val centreY = m12 * scale
+        // Normalise so the homogeneous term is -1. The centre is then the negated last column, and
+        // the leading block is the shape displaced by the centre's outer product.
+        val scale = -1.0 / m22
+        val centreX = -m02 * scale
+        val centreY = -m12 * scale
 
-        // Translate the conic to the origin; what remains is the shape.
-        val a = m00 * scale - centreX * centreX
-        val b = m01 * scale - centreX * centreY
-        val c = m11 * scale - centreY * centreY
+        // Adding the outer product back leaves the shape about the origin. Subtracting instead
+        // would drive the eigenvalues negative and report every ellipse as a point.
+        val a = m00 * scale + centreX * centreX
+        val b = m01 * scale + centreX * centreY
+        val c = m11 * scale + centreY * centreY
 
         // Eigenvalues of the symmetric 2x2 [[a, b], [b, c]] are the squared semi axes.
         val mean = (a + c) / 2.0
         val spread = hypot((a - c) / 2.0, b)
-        val majorSquared = mean + spread
-        val minorSquared = mean - spread
 
         return EllipseParameters(
             centreX = centreX,
             centreY = centreY,
-            semiMajor = sqrt(majorSquared.coerceAtLeast(0.0)),
-            semiMinor = sqrt(minorSquared.coerceAtLeast(0.0)),
-            rotationRadians = if (spread < DEGENERATE_EPSILON) 0.0 else atan2(b, (a - c) / 2.0) / 2.0,
+            semiMajor = sqrt((mean + spread).coerceAtLeast(0.0)),
+            semiMinor = sqrt((mean - spread).coerceAtLeast(0.0)),
+            rotationRadians = if (spread < DEGENERATE_EPSILON) 0.0 else atan2(2.0 * b, a - c) / 2.0,
         )
     }
 
@@ -83,6 +85,41 @@ data class DualConic(
          */
         private const val DEGENERATE_EPSILON = 1e-12
 
+        /**
+         * The ellipse with the given centre, semi axes and orientation.
+         *
+         * Built as `C = T · diag(a², b², -1) · T'` with `T = [[R, t], [0, 1]]`, which expands to
+         * `[[R D R' - t t', -t], [-t', -1]]`. The minus one is what makes this a dual conic rather
+         * than merely a symmetric matrix: tangency, `l' C l = 0`, only holds with it, and tangency
+         * is the entire reason the solver can write `C = P Q P'`.
+         */
+        fun fromEllipse(
+            centreX: Double,
+            centreY: Double,
+            semiMajor: Double,
+            semiMinor: Double,
+            rotationRadians: Double,
+        ): DualConic {
+            val cosine = cos(rotationRadians)
+            val sine = sin(rotationRadians)
+            val major = semiMajor * semiMajor
+            val minor = semiMinor * semiMinor
+
+            // R · diag(a², b²) · R', the shape with no position.
+            val shapeXx = major * cosine * cosine + minor * sine * sine
+            val shapeXy = (major - minor) * cosine * sine
+            val shapeYy = major * sine * sine + minor * cosine * cosine
+
+            return DualConic(
+                m00 = shapeXx - centreX * centreX,
+                m01 = shapeXy - centreX * centreY,
+                m02 = -centreX,
+                m11 = shapeYy - centreY * centreY,
+                m12 = -centreY,
+                m22 = -1.0,
+            )
+        }
+
         /** The ellipse centred at ([centreX], [centreY]) with the given semi axes and no rotation. */
         fun fromAxisAligned(
             centreX: Double,
@@ -90,13 +127,12 @@ data class DualConic(
             semiX: Double,
             semiY: Double,
         ): DualConic =
-            DualConic(
-                m00 = semiX * semiX + centreX * centreX,
-                m01 = centreX * centreY,
-                m02 = centreX,
-                m11 = semiY * semiY + centreY * centreY,
-                m12 = centreY,
-                m22 = 1.0,
+            fromEllipse(
+                centreX = centreX,
+                centreY = centreY,
+                semiMajor = semiX,
+                semiMinor = semiY,
+                rotationRadians = 0.0,
             )
 
         /**
