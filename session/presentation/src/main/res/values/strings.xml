@@ -23,4 +23,14 @@
     <string name="capture_move_around">Move further around the object</string>
     <string name="capture_outline_unusable">That outline was too small to use</string>
     <string name="capture_measured">Measured. More angles will improve it.</string>
+    <string name="session_object_extent_adjusted">%1$d x %2$d x %3$d mm, adjusted by hand</string>
+    <string name="session_object_delete">Delete</string>
+    <string name="session_object_adjust">Adjust</string>
+    <string name="session_adjust_title">Adjust %1$s</string>
+    <string name="session_adjust_size">Size</string>
+    <string name="session_adjust_position">Position</string>
+    <string name="session_adjust_apply">Apply</string>
+    <string name="session_adjust_axis_width">Width</string>
+    <string name="session_adjust_axis_height">Height</string>
+    <string name="session_adjust_axis_depth">Depth</string>
 </resources>

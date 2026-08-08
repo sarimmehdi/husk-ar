@@ -5,6 +5,16 @@
 //   ./gradlew :presentation:stabilityDump
 
 @Composable
+public fun com.sarim.husk.session.presentation.AdjustShellSheet(row: com.sarim.husk.session.presentation.MeasuredObjectRow, onApply: kotlin.Function1<com.sarim.husk.session.domain.usecase.ShellAdjustment, kotlin.Unit>, onDismiss: kotlin.Function0<kotlin.Unit>, modifier: androidx.compose.ui.Modifier): kotlin.Unit
+  skippable: false
+  restartable: true
+  params:
+    - row: RUNTIME (requires runtime check)
+    - onApply: STABLE (function type)
+    - onDismiss: STABLE (function type)
+    - modifier: STABLE (marked @Stable or @Immutable)
+
+@Composable
 public fun com.sarim.husk.session.presentation.CaptureScreen(viewModel: com.sarim.husk.session.presentation.CaptureViewModel, marker: com.sarim.husk.ar.MarkerImage, palette: com.sarim.husk.ar.ShellPalette, modifier: androidx.compose.ui.Modifier): kotlin.Unit
   skippable: false
   restartable: true
@@ -45,12 +55,32 @@ private fun com.sarim.husk.session.presentation.LoadingIndicator(contentPadding:
     - contentPadding: STABLE (marked @Stable or @Immutable)
 
 @Composable
-private fun com.sarim.husk.session.presentation.ObjectCard(row: com.sarim.husk.session.presentation.MeasuredObjectRow, onMeasure: kotlin.Function0<kotlin.Unit>): kotlin.Unit
+private fun com.sarim.husk.session.presentation.ObjectCard(row: com.sarim.husk.session.presentation.MeasuredObjectRow, onMeasure: kotlin.Function0<kotlin.Unit>, onAdjust: kotlin.Function0<kotlin.Unit>, onDelete: kotlin.Function0<kotlin.Unit>): kotlin.Unit
   skippable: false
   restartable: true
   params:
     - row: RUNTIME (requires runtime check)
     - onMeasure: STABLE (function type)
+    - onAdjust: STABLE (function type)
+    - onDelete: STABLE (function type)
+
+@Composable
+private fun com.sarim.husk.session.presentation.OffsetSlider(labelId: kotlin.Int, value: kotlin.Float, onChange: kotlin.Function1<kotlin.Float, kotlin.Unit>): kotlin.Unit
+  skippable: true
+  restartable: true
+  params:
+    - labelId: STABLE (primitive type)
+    - value: STABLE (primitive type)
+    - onChange: STABLE (function type)
+
+@Composable
+private fun com.sarim.husk.session.presentation.ScaleSlider(labelId: kotlin.Int, value: kotlin.Float, onChange: kotlin.Function1<kotlin.Float, kotlin.Unit>): kotlin.Unit
+  skippable: true
+  restartable: true
+  params:
+    - labelId: STABLE (primitive type)
+    - value: STABLE (primitive type)
+    - onChange: STABLE (function type)
 
 @Composable
 private fun com.sarim.husk.session.presentation.SessionCard(row: com.sarim.husk.session.presentation.SessionRow, onOpen: kotlin.Function0<kotlin.Unit>): kotlin.Unit

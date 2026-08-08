@@ -195,6 +195,7 @@ private fun MeasuredObject.toEntity(
     viewSpreadRadians = quality?.viewSpreadRadians,
     conicResidual = quality?.conicResidual,
     nullSpaceMargin = quality?.nullSpaceMargin,
+    isHandAdjusted = isHandAdjusted,
 )
 
 private fun MeasuredObjectEntity.toDomain(observations: List<ObservationEntity>) =
@@ -217,6 +218,7 @@ private fun MeasuredObjectEntity.toDomain(observations: List<ObservationEntity>)
             } else {
                 MeasurementQuality(viewSpreadRadians, conicResidual, nullSpaceMargin)
             },
+        isHandAdjusted = isHandAdjusted,
     )
 
 private fun Observation.toEntity(

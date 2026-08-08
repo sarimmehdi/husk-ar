@@ -11,6 +11,7 @@ import com.sarim.husk.session.domain.model.ObjectId
 import com.sarim.husk.session.domain.model.Session
 import com.sarim.husk.session.domain.model.SessionId
 import com.sarim.husk.session.domain.repository.SessionRepository
+import com.sarim.husk.session.domain.usecase.AdjustShellUseCase
 import com.sarim.husk.session.domain.usecase.DeleteObjectUseCase
 import com.sarim.husk.session.domain.usecase.ObserveSessionUseCase
 import com.sarim.husk.session.domain.usecase.StartObjectUseCase
@@ -99,6 +100,7 @@ class SessionDetailViewModelTest {
                         observeSessionUseCase = ObserveSessionUseCase(repository),
                         startObjectUseCase = StartObjectUseCase(repository) { ids.next() },
                         deleteObjectUseCase = DeleteObjectUseCase(repository),
+                        adjustShellUseCase = AdjustShellUseCase(repository),
                     ),
                 sessionId = sessionId,
             )

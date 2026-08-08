@@ -82,6 +82,8 @@ data class MeasuredObjectEntity(
     @ColumnInfo(name = "quality_conicResidual") val conicResidual: Double?,
     /** Null space margin. Null until a fit succeeds. */
     @ColumnInfo(name = "quality_nullSpaceMargin") val nullSpaceMargin: Double?,
+    /** Whether the shell was adjusted by hand after being fitted. */
+    val isHandAdjusted: Boolean,
 )
 
 /** A camera pose flattened into columns. */

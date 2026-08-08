@@ -9,6 +9,8 @@ import com.sarim.husk.session.domain.model.MeasurementConfidence
 import com.sarim.husk.session.domain.model.ObjectId
 import com.sarim.husk.session.domain.model.Session
 import com.sarim.husk.session.domain.model.SessionId
+import com.sarim.husk.session.domain.model.ShellAdjustment
+import com.sarim.husk.session.domain.usecase.AdjustShellUseCase
 import com.sarim.husk.session.domain.usecase.DeleteObjectUseCase
 import com.sarim.husk.session.domain.usecase.ObserveSessionUseCase
 import com.sarim.husk.session.domain.usecase.StartObjectUseCase
@@ -62,6 +64,14 @@ sealed interface SessionDetailScreenToViewModelEvents {
         /** Which object. */
         val id: String,
     ) : SessionDetailScreenToViewModelEvents
+
+    /** Correct a fitted shell by hand. */
+    data class AdjustObject(
+        /** Which object. */
+        val id: String,
+        /** What to change. */
+        val adjustment: ShellAdjustment,
+    ) : SessionDetailScreenToViewModelEvents
 }
 
 /** Everything the session screen needs from the domain. */
@@ -72,6 +82,8 @@ data class SessionDetailScreenUseCase(
     val startObjectUseCase: StartObjectUseCase,
     /** Removes one. */
     val deleteObjectUseCase: DeleteObjectUseCase,
+    /** Corrects one by hand. */
+    val adjustShellUseCase: AdjustShellUseCase,
 )
 
 /** Drives the screen for one session. */
@@ -99,6 +111,9 @@ class SessionDetailViewModel(
 
                 is SessionDetailScreenToViewModelEvents.DeleteObject ->
                     useCases.deleteObjectUseCase(sessionId, ObjectId(event.id))
+
+                is SessionDetailScreenToViewModelEvents.AdjustObject ->
+                    useCases.adjustShellUseCase(sessionId, ObjectId(event.id), event.adjustment)
             }
         }
     }
@@ -130,7 +145,13 @@ private fun MeasuredObject.toRow(): MeasuredObjectRow {
             listOf(extent.x, extent.y, extent.z)
                 .map { (it * MILLIMETRES_PER_METRE).roundToInt() }
                 .sortedDescending(),
-        confidence = quality?.confidence() ?: MeasurementConfidence.UNMEASURED,
+        // A hand-adjusted shell reports as adjusted whatever the solver once said about it. The
+        // number described views that no longer match what is on screen.
+        confidence =
+            when {
+                isHandAdjusted -> MeasurementConfidence.ADJUSTED
+                else -> quality?.confidence() ?: MeasurementConfidence.UNMEASURED
+            },
     )
 }
 

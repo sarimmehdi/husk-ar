@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,9 +19,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
@@ -61,6 +66,21 @@ fun SessionDetailContent(
     onMeasureObject: (String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    // Held here rather than in the view model: which sheet is open is a property of this screen,
+    // and routing it through state would survive rotation only to reopen over a deleted row.
+    var adjusting by remember { mutableStateOf<MeasuredObjectRow?>(null) }
+
+    adjusting?.let { row ->
+        AdjustShellSheet(
+            row = row,
+            onApply = { adjustment ->
+                onEvent(SessionDetailScreenToViewModelEvents.AdjustObject(row.id, adjustment))
+                adjusting = null
+            },
+            onDismiss = { adjusting = null },
+        )
+    }
+
     SessionDetailScreenTemplate(
         modifier = modifier,
         onStartObject = { onEvent(SessionDetailScreenToViewModelEvents.StartObject("")) },
@@ -82,7 +102,14 @@ fun SessionDetailContent(
                     verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
                 ) {
                     items(state.objects, key = { it.id }) { row ->
-                        ObjectCard(row, onMeasure = { onMeasureObject(row.id, row.label) })
+                        ObjectCard(
+                            row = row,
+                            onMeasure = { onMeasureObject(row.id, row.label) },
+                            onAdjust = { adjusting = row },
+                            onDelete = {
+                                onEvent(SessionDetailScreenToViewModelEvents.DeleteObject(row.id))
+                            },
+                        )
                     }
                 }
         }
@@ -93,6 +120,8 @@ fun SessionDetailContent(
 private fun ObjectCard(
     row: MeasuredObjectRow,
     onMeasure: () -> Unit,
+    onAdjust: () -> Unit,
+    onDelete: () -> Unit,
 ) {
     Card(
         onClick = onMeasure,
@@ -114,6 +143,14 @@ private fun ObjectCard(
                 text = pluralStringResource(R.plurals.session_view_count, row.viewCount, row.viewCount),
                 style = MaterialTheme.typography.bodySmall,
             )
+            Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)) {
+                TextButton(onClick = onAdjust) {
+                    Text(stringResource(R.string.session_object_adjust))
+                }
+                TextButton(onClick = onDelete) {
+                    Text(stringResource(R.string.session_object_delete))
+                }
+            }
         }
     }
 }
@@ -132,6 +169,13 @@ private fun measurementText(row: MeasuredObjectRow): String =
         MeasurementConfidence.ROUGH ->
             stringResource(
                 R.string.session_object_extent_rough,
+                row.extentMillimetres[0],
+                row.extentMillimetres[1],
+                row.extentMillimetres[2],
+            )
+        MeasurementConfidence.ADJUSTED ->
+            stringResource(
+                R.string.session_object_extent_adjusted,
                 row.extentMillimetres[0],
                 row.extentMillimetres[1],
                 row.extentMillimetres[2],

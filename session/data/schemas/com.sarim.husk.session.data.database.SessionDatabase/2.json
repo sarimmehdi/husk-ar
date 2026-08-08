@@ -1,0 +1,352 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "c7c428ef9d6a8562ae12d0b1687e2947",
+    "entities": [
+      {
+        "tableName": "session",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `markerId` TEXT NOT NULL, `createdAtEpochMillis` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "markerId",
+            "columnName": "markerId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAtEpochMillis",
+            "columnName": "createdAtEpochMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "measured_object",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `sessionId` TEXT NOT NULL, `label` TEXT NOT NULL, `sortIndex` INTEGER NOT NULL, `quality_viewSpreadRadians` REAL, `quality_conicResidual` REAL, `quality_nullSpaceMargin` REAL, `isHandAdjusted` INTEGER NOT NULL, `shell_centreX` REAL NOT NULL, `shell_centreY` REAL NOT NULL, `shell_centreZ` REAL NOT NULL, `shell_radiusX` REAL NOT NULL, `shell_radiusY` REAL NOT NULL, `shell_radiusZ` REAL NOT NULL, `shell_rotationX` REAL NOT NULL, `shell_rotationY` REAL NOT NULL, `shell_rotationZ` REAL NOT NULL, `shell_rotationW` REAL NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`sessionId`) REFERENCES `session`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sessionId",
+            "columnName": "sessionId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "label",
+            "columnName": "label",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sortIndex",
+            "columnName": "sortIndex",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "viewSpreadRadians",
+            "columnName": "quality_viewSpreadRadians",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "conicResidual",
+            "columnName": "quality_conicResidual",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nullSpaceMargin",
+            "columnName": "quality_nullSpaceMargin",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "isHandAdjusted",
+            "columnName": "isHandAdjusted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shell.centreX",
+            "columnName": "shell_centreX",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shell.centreY",
+            "columnName": "shell_centreY",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shell.centreZ",
+            "columnName": "shell_centreZ",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shell.radiusX",
+            "columnName": "shell_radiusX",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shell.radiusY",
+            "columnName": "shell_radiusY",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shell.radiusZ",
+            "columnName": "shell_radiusZ",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shell.rotationX",
+            "columnName": "shell_rotationX",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shell.rotationY",
+            "columnName": "shell_rotationY",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shell.rotationZ",
+            "columnName": "shell_rotationZ",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shell.rotationW",
+            "columnName": "shell_rotationW",
+            "affinity": "REAL",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_measured_object_sessionId",
+            "unique": false,
+            "columnNames": [
+              "sessionId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_measured_object_sessionId` ON `${TABLE_NAME}` (`sessionId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "session",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "sessionId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "observation",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `objectId` TEXT NOT NULL, `sortIndex` INTEGER NOT NULL, `capturedAtEpochMillis` INTEGER NOT NULL, `pose_translationX` REAL NOT NULL, `pose_translationY` REAL NOT NULL, `pose_translationZ` REAL NOT NULL, `pose_rotationX` REAL NOT NULL, `pose_rotationY` REAL NOT NULL, `pose_rotationZ` REAL NOT NULL, `pose_rotationW` REAL NOT NULL, `lens_focalLengthX` REAL NOT NULL, `lens_focalLengthY` REAL NOT NULL, `lens_principalPointX` REAL NOT NULL, `lens_principalPointY` REAL NOT NULL, `outline_m00` REAL NOT NULL, `outline_m01` REAL NOT NULL, `outline_m02` REAL NOT NULL, `outline_m11` REAL NOT NULL, `outline_m12` REAL NOT NULL, `outline_m22` REAL NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`objectId`) REFERENCES `measured_object`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "objectId",
+            "columnName": "objectId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sortIndex",
+            "columnName": "sortIndex",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "capturedAtEpochMillis",
+            "columnName": "capturedAtEpochMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pose.translationX",
+            "columnName": "pose_translationX",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pose.translationY",
+            "columnName": "pose_translationY",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pose.translationZ",
+            "columnName": "pose_translationZ",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pose.rotationX",
+            "columnName": "pose_rotationX",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pose.rotationY",
+            "columnName": "pose_rotationY",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pose.rotationZ",
+            "columnName": "pose_rotationZ",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pose.rotationW",
+            "columnName": "pose_rotationW",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "intrinsics.focalLengthX",
+            "columnName": "lens_focalLengthX",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "intrinsics.focalLengthY",
+            "columnName": "lens_focalLengthY",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "intrinsics.principalPointX",
+            "columnName": "lens_principalPointX",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "intrinsics.principalPointY",
+            "columnName": "lens_principalPointY",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "outline.m00",
+            "columnName": "outline_m00",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "outline.m01",
+            "columnName": "outline_m01",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "outline.m02",
+            "columnName": "outline_m02",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "outline.m11",
+            "columnName": "outline_m11",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "outline.m12",
+            "columnName": "outline_m12",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "outline.m22",
+            "columnName": "outline_m22",
+            "affinity": "REAL",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_observation_objectId",
+            "unique": false,
+            "columnNames": [
+              "objectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_observation_objectId` ON `${TABLE_NAME}` (`objectId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "measured_object",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "objectId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c7c428ef9d6a8562ae12d0b1687e2947')"
+    ]
+  }
+}

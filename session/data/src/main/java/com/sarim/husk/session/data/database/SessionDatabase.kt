@@ -11,7 +11,7 @@ import com.sarim.husk.session.data.entity.SessionEntity
 /** The database holding measuring sessions. */
 @Database(
     entities = [SessionEntity::class, MeasuredObjectEntity::class, ObservationEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = true,
 )
 abstract class SessionDatabase : RoomDatabase() {

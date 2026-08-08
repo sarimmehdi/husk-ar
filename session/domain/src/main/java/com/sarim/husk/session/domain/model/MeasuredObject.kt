@@ -24,6 +24,9 @@ enum class MeasurementConfidence {
 
     /** Views spread well around the object. Within a few percent. */
     GOOD,
+
+    /** Adjusted by hand, so it is whatever the person decided rather than what was measured. */
+    ADJUSTED,
 }
 
 /**
@@ -90,4 +93,12 @@ data class MeasuredObject(
     val observations: List<Observation> = emptyList(),
     /** How far the shell can be trusted, or null when it was placed rather than solved. */
     val quality: MeasurementQuality? = null,
+    /**
+     * Whether the shell has been adjusted by hand since it was fitted.
+     *
+     * Kept because the solver's confidence stops describing an adjusted shell the moment it is
+     * moved: the number was earned by views that no longer match what is on screen. Reporting it
+     * afterwards would be the app vouching for a figure a person typed in.
+     */
+    val isHandAdjusted: Boolean = false,
 )

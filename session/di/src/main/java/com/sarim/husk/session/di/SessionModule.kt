@@ -3,6 +3,7 @@ package com.sarim.husk.session.di
 import android.graphics.BitmapFactory
 import androidx.room.Room
 import com.sarim.husk.ar.MarkerImage
+import com.sarim.husk.session.data.database.MIGRATION_1_2
 import com.sarim.husk.session.data.database.SessionDatabase
 import com.sarim.husk.session.data.fitting.SolverShellFitter
 import com.sarim.husk.session.data.repository.RoomSessionRepositoryImpl
@@ -11,6 +12,7 @@ import com.sarim.husk.session.domain.model.MarkerId
 import com.sarim.husk.session.domain.model.ObjectId
 import com.sarim.husk.session.domain.model.SessionId
 import com.sarim.husk.session.domain.repository.SessionRepository
+import com.sarim.husk.session.domain.usecase.AdjustShellUseCase
 import com.sarim.husk.session.domain.usecase.CaptureObservationUseCase
 import com.sarim.husk.session.domain.usecase.CreateSessionUseCase
 import com.sarim.husk.session.domain.usecase.DeleteObjectUseCase
@@ -40,7 +42,8 @@ val sessionModule =
                     context = androidContext(),
                     klass = SessionDatabase::class.java,
                     name = DATABASE_NAME,
-                ).build()
+                ).addMigrations(MIGRATION_1_2)
+                .build()
         }
         single { get<SessionDatabase>().sessionDao() }
         single { get<SessionDatabase>().measurementDao() }
@@ -59,6 +62,7 @@ val sessionModule =
         factory { StartObjectUseCase(get(), { UUID.randomUUID().toString() }) }
         factory { CaptureObservationUseCase(get(), get()) }
         factory { DeleteObjectUseCase(get()) }
+        factory { AdjustShellUseCase(get()) }
         factory { RenameSessionUseCase(get()) }
         factory { DeleteSessionUseCase(get()) }
 
@@ -68,7 +72,7 @@ val sessionModule =
         // deeper down where it would be harder to find and replace.
         viewModel { SessionListViewModel(get(), MarkerId(DEFAULT_MARKER_ID)) }
 
-        factory { SessionDetailScreenUseCase(get(), get(), get()) }
+        factory { SessionDetailScreenUseCase(get(), get(), get(), get()) }
         factory { CaptureScreenUseCase(get()) }
 
         // Loaded once. Decoding a nine hundred pixel square JPEG per screen would stutter the
