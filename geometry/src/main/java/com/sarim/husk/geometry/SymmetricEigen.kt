@@ -2,7 +2,6 @@ package com.sarim.husk.geometry
 
 import kotlin.math.abs
 import kotlin.math.hypot
-import kotlin.math.sqrt
 
 /**
  * Eigen decomposition of a real symmetric 3x3 matrix.
@@ -47,43 +46,16 @@ internal object SymmetricEigen {
      *
      * Eigenvectors carry no inherent handedness, so a decomposition can produce a reflection. The
      * third column is flipped when needed, because a reflection is not a rotation and would render
-     * an object mirrored.
+     * an object mirrored. Once the frame is right-handed the conversion itself is
+     * [Quaternion.fromRotationMatrix].
      */
     fun toRotation(eigenvectors: Array<DoubleArray>): Quaternion {
         val m = Array(3) { row -> eigenvectors[row].copyOf() }
         if (determinant(m) < 0.0) {
             for (row in 0..2) m[row][2] = -m[row][2]
         }
-
-        val trace = m[0][0] + m[1][1] + m[2][2]
-        return if (trace > 0.0) {
-            val s = sqrt(trace + 1.0) * 2.0
-            Quaternion(
-                x = (m[2][1] - m[1][2]) / s,
-                y = (m[0][2] - m[2][0]) / s,
-                z = (m[1][0] - m[0][1]) / s,
-                w = 0.25 * s,
-            )
-        } else {
-            largestDiagonalBranch(m)
-        }.normalized()
+        return Quaternion.fromRotationMatrix(m)
     }
-
-    private fun largestDiagonalBranch(m: Array<DoubleArray>): Quaternion =
-        when {
-            m[0][0] > m[1][1] && m[0][0] > m[2][2] -> {
-                val s = sqrt(1.0 + m[0][0] - m[1][1] - m[2][2]) * 2.0
-                Quaternion(0.25 * s, (m[0][1] + m[1][0]) / s, (m[0][2] + m[2][0]) / s, (m[2][1] - m[1][2]) / s)
-            }
-            m[1][1] > m[2][2] -> {
-                val s = sqrt(1.0 + m[1][1] - m[0][0] - m[2][2]) * 2.0
-                Quaternion((m[0][1] + m[1][0]) / s, 0.25 * s, (m[1][2] + m[2][1]) / s, (m[0][2] - m[2][0]) / s)
-            }
-            else -> {
-                val s = sqrt(1.0 + m[2][2] - m[0][0] - m[1][1]) * 2.0
-                Quaternion((m[0][2] + m[2][0]) / s, (m[1][2] + m[2][1]) / s, 0.25 * s, (m[1][0] - m[0][1]) / s)
-            }
-        }
 
     private fun determinant(m: Array<DoubleArray>): Double =
         m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1]) -

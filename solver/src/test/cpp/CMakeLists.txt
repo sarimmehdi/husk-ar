@@ -43,6 +43,7 @@ enable_testing()
 add_executable(husk_core_tests
     linalg_test.cpp
     lfd_test.cpp
+    bridge_test.cpp
 )
 target_link_libraries(husk_core_tests PRIVATE husk_core gtest_main)
 add_test(NAME husk_core_tests COMMAND husk_core_tests)
