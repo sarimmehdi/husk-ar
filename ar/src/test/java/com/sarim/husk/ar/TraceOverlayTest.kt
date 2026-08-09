@@ -32,14 +32,20 @@ class TraceOverlayTest {
 
     private var changed = mutableListOf<TracedEllipse>()
     private var committed: TracedEllipse? = null
+    private var starts = 0
 
     private fun setContent() {
         changed = mutableListOf()
         committed = null
+        starts = 0
         composeRule.setContent {
             TraceOverlay(
-                onTraceChanged = { changed += it },
-                onTraceCommitted = { committed = it },
+                listener =
+                    TraceListener(
+                        onStarted = { starts++ },
+                        onChanged = { changed += it },
+                        onCommitted = { committed = it },
+                    ),
                 strokeColour = Color.Cyan,
                 contentDescription = OVERLAY,
                 modifier = Modifier.size(400.dp),
@@ -89,6 +95,24 @@ class TraceOverlayTest {
         }
 
         assertTrue("expected the trace to be reported during the drag", changed.size >= 2)
+    }
+
+    @Test
+    fun `the start of a drag is reported once, not on every movement`() {
+        // The frame a drag began on is what an outline is judged against. Re-marking the start on
+        // every movement would leave that frame milliseconds old, and any check for the camera
+        // having moved during the drag would compare two frames that are always nearly identical.
+        setContent()
+
+        composeRule.onNodeWithContentDescription(OVERLAY).performTouchInput {
+            down(Offset(100f, 100f))
+            moveTo(Offset(150f, 150f))
+            moveTo(Offset(220f, 200f))
+            moveTo(Offset(300f, 260f))
+            up()
+        }
+
+        assertEquals(1, starts)
     }
 
     @Test

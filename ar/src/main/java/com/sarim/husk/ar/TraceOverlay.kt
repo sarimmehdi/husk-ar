@@ -31,8 +31,7 @@ import kotlin.math.abs
  */
 @Composable
 fun TraceOverlay(
-    onTraceChanged: (TracedEllipse) -> Unit,
-    onTraceCommitted: (TracedEllipse) -> Unit,
+    listener: TraceListener,
     strokeColour: Color,
     contentDescription: String,
     modifier: Modifier = Modifier,
@@ -55,18 +54,23 @@ fun TraceOverlay(
                         val origin = down.position
                         start = origin
                         current = origin
+                        // Reported once, when the finger lands. A caller that has to infer the
+                        // start from the first movement would re-mark it on every movement, and
+                        // anything comparing the frame then against the frame now would always be
+                        // comparing two frames a few milliseconds apart.
+                        listener.onStarted()
 
                         drag(down.id) { change ->
                             change.consume()
                             current = change.position
-                            onTraceChanged(traceBetween(origin, change.position))
+                            listener.onChanged(traceBetween(origin, change.position))
                         }
 
                         val trace = traceBetween(origin, current ?: origin)
                         // Only a real drag is committed. A tap that never moved is a miss, and
                         // committing it would spend one of the three views the solver needs on a
                         // view of nothing.
-                        if (trace.isUsable) onTraceCommitted(trace)
+                        if (trace.isUsable) listener.onCommitted(trace)
                         start = null
                         current = null
                     }

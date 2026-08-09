@@ -30,6 +30,7 @@ import com.sarim.husk.ar.MarkerImage
 import com.sarim.husk.ar.SceneContent
 import com.sarim.husk.ar.SceneObserver
 import com.sarim.husk.ar.ShellPalette
+import com.sarim.husk.ar.TraceListener
 import com.sarim.husk.ar.TraceOverlay
 import com.sarim.husk.ui.theme.spacing
 
@@ -71,16 +72,21 @@ fun CaptureScreen(
         )
 
         TraceOverlay(
-            onTraceChanged = { viewModel.onEvent(CaptureScreenToViewModelEvents.TraceStarted) },
-            onTraceCommitted = { trace ->
-                viewModel.onEvent(
-                    CaptureScreenToViewModelEvents.TraceCommitted(
-                        trace = trace,
-                        previewWidth = previewSize.width,
-                        previewHeight = previewSize.height,
-                    ),
-                )
-            },
+            // onChanged is left alone: the overlay draws the outline itself, and the view model
+            // needs only the finished one plus the frame the drag began on.
+            listener =
+                TraceListener(
+                    onStarted = { viewModel.onEvent(CaptureScreenToViewModelEvents.TraceStarted) },
+                    onCommitted = { trace ->
+                        viewModel.onEvent(
+                            CaptureScreenToViewModelEvents.TraceCommitted(
+                                trace = trace,
+                                previewWidth = previewSize.width,
+                                previewHeight = previewSize.height,
+                            ),
+                        )
+                    },
+                ),
             strokeColour = palette.selected,
             contentDescription = stringResource(R.string.capture_overlay_description),
         )
